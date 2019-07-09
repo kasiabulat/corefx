@@ -5,6 +5,9 @@
 // Changes to this file must follow the http://aka.ms/api-review process.
 // ------------------------------------------------------------------------------
 
+using System.Collections;
+using System.Collections.Generic;
+
 namespace System.Text.Json
 {
     public enum JsonCommentHandling : byte
@@ -124,6 +127,45 @@ namespace System.Text.Json
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw null; }
         }
     }
+
+    /* WRITABLE JSON API */
+    public partial class JsonNode 
+    {
+
+    }
+
+    public partial class Jsonobject : JsonNode, IEnumerable<KeyValuePair<string, JsonNode>>
+    {
+        public IEnumerator<KeyValuePair<string, JsonNode>> GetEnumerator() { throw null; }
+
+        IEnumerator IEnumerable.GetEnumerator() { throw null; }
+    }
+
+    public partial class JsonArray : JsonNode
+    {
+
+    }
+
+    public partial class JsonString : JsonNode
+    {
+
+    }
+
+    public partial class JsonNumber : JsonNode
+    {
+
+    }
+
+    public partial class JsonBool : JsonNode
+    {
+
+    }
+
+    public partial class JsonNull : JsonNode
+    {
+
+    }
+
     public readonly partial struct JsonEncodedText : System.IEquatable<System.Text.Json.JsonEncodedText>
     {
         private readonly object _dummy;
