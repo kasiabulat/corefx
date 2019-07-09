@@ -134,11 +134,16 @@ namespace System.Text.Json
 
     }
 
-    public partial class Jsonobject : JsonNode, IEnumerable<KeyValuePair<string, JsonNode>>
+    public partial class JsonObject : JsonNode, IEnumerable<KeyValuePair<string, JsonNode>>
     {
         public IEnumerator<KeyValuePair<string, JsonNode>> GetEnumerator() { throw null; }
-
         IEnumerator IEnumerable.GetEnumerator() { throw null; }
+
+        public void Add(KeyValuePair<string, JsonNode> jsonProperty) { }
+        public void Add(string propertyName, string propertyValue) { }
+        public void Add(string propertyName, int propertyValue) { }
+        public void Add(string propertyName, bool propertyValue) { }
+       
     }
 
     public partial class JsonArray : JsonNode
