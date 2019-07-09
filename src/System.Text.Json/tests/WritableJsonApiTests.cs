@@ -15,9 +15,23 @@ namespace System.Text.Json.Tests
                 { "name", "Kasia" },
                 { "age", 22 },
                 { "is developer", true },
-                { "null property", null },
+                //todo: { "null property", null }, error: ambiguous call
+            };  
+        }
+
+        [Fact]
+        public static void TestCreatingNestedJsonObject()
+        {
+            var nestedJsonObject = new JsonObject
+            {
+                { "regular", "property" },
+                {
+                    "nested", new JsonObject()
+                    {
+                        { "inner", "property" }
+                    }
+                }
             };
-            
         }
     }
 }

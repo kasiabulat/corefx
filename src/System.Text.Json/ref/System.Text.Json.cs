@@ -140,6 +140,7 @@ namespace System.Text.Json
         IEnumerator IEnumerable.GetEnumerator() { throw null; }
 
         public void Add(KeyValuePair<string, JsonNode> jsonProperty) { }
+        public void Add(string propertyName, JsonNode propertyValue) { }
         public void Add(string propertyName, string propertyValue) { }
         public void Add(string propertyName, int propertyValue) { }
         public void Add(string propertyName, bool propertyValue) { }
