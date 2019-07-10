@@ -7,6 +7,14 @@ namespace System.Text.Json.Tests
 {
     public static class WritableJsonApiTests
     {
+        private static class SampleExternalLibrary
+        {
+            public static KeyValuePair<string, JsonNode> GetJsonProperty()
+            {
+                return new KeyValuePair<string, JsonNode>("sample property", new JsonString());
+            }
+        }
+
         [Fact]
         public static void TestCreatingJsonObject()
         {
@@ -16,7 +24,7 @@ namespace System.Text.Json.Tests
                 { "age", 22 },
                 { "is developer", true },
                 //todo: { "null property", null }, error: ambiguous call
-            };  
+            };
         }
 
         [Fact]
@@ -31,6 +39,20 @@ namespace System.Text.Json.Tests
                         { "inner", "property" }
                     }
                 }
+            };
+        }
+
+        /// <summary>
+        /// Adding KeyValuePair 
+        /// </summary>
+        [Fact]
+        public static void TestAddingKeyValuePair()
+        {
+            var nestedJsonObject = new JsonObject
+            {
+                SampleExternalLibrary.GetJsonProperty(),
+                SampleExternalLibrary.GetJsonProperty(),
+                SampleExternalLibrary.GetJsonProperty(),
             };
         }
     }

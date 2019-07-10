@@ -129,6 +129,10 @@ namespace System.Text.Json
     }
 
     /* WRITABLE JSON API */
+
+    // TODO: consider using nullable annotations
+    // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references
+
     public partial class JsonNode 
     {
 
