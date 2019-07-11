@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.WebSockets;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using Microsoft.VisualBasic;
 using Xunit;
+using System.Linq;
 
 namespace System.Text.Json.Tests
 {
@@ -150,6 +152,38 @@ namespace System.Text.Json.Tests
         {
             var employees = new JsonObject();
             employees.AddRange(EmployeesDatabase.GetTenBestEmployees());
+        }
+
+        /// <summary>
+        /// Adding values to JsonArray
+        /// </summary>
+        [Fact]
+        public static void TestAddingToJsonArray()
+        {
+            var employeesIds = new JsonArray();
+
+            foreach (var employee in EmployeesDatabase.GetTenBestEmployees())
+            {
+                employeesIds.Add(employee.Key);
+            }
+        }
+
+        /// <summary>
+        /// Creating Json array from collection
+        /// </summary>
+        [Fact]
+        public static void TestCreatingJsonArrayFromCollection()
+        {
+            var employeesIds = new JsonArray(EmployeesDatabase.GetTenBestEmployees().Select(employee => new JsonString(employee.Key)));
+        }
+
+        /// <summary>
+        /// Creating Json array from collection of strings
+        /// </summary>
+        [Fact]
+        public static void TestCreatingJsonArrayFromCollectionOfString()
+        {
+            var employeesIds = new JsonArray(EmployeesDatabase.GetTenBestEmployees().Select(employee => employee.Key));
         }
     }
 }

@@ -155,24 +155,43 @@ namespace System.Text.Json
        
     }
 
-    public partial class JsonArray : JsonNode
+    public partial class JsonArray : JsonNode, IEnumerable<JsonNode>
     {
+        public JsonArray() { }
+        public JsonArray(IEnumerable<JsonNode> jsonValues) { }
+        
+        // TODO: check if this can be solved automatically calling JsoonString constructor
+        public JsonArray(IEnumerable<string> jsonValues) { }
+        public JsonArray(IEnumerable<int> jsonValues) { }
+        public JsonArray(IEnumerable<bool> jsonValues) { }
+
+
+        public IEnumerator<JsonNode> GetEnumerator() { throw null; }
+        IEnumerator IEnumerable.GetEnumerator() { throw null; }
+
+        public void Add(JsonNode jsonValue) { }
+        public void Add(string jsonValue) { }
+        public void Add(int jsonValue) { }
+        public void Add(bool jsonValue) { }
 
     }
 
     public partial class JsonString : JsonNode
     {
-
+        public JsonString() { }
+        public JsonString(string value) { }
     }
 
     public partial class JsonNumber : JsonNode
     {
-
+        public JsonNumber() { }
+        public JsonNumber(int value) { }
     }
 
     public partial class JsonBool : JsonNode
     {
-
+        public JsonBool() { }
+        public JsonBool(bool value) { }
     }
 
     public partial class JsonNull : JsonNode
