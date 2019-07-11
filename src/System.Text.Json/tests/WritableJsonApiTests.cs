@@ -1,59 +1,96 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using Microsoft.VisualBasic;
 using Xunit;
 
 namespace System.Text.Json.Tests
 {
     public static class WritableJsonApiTests
     {
-        private static class SampleExternalLibrary
+        private static class EmployeesDatabase
         {
-            public static KeyValuePair<string, JsonNode> GetJsonProperty()
+            private static int Id = 0;
+            public static KeyValuePair<string, JsonNode> GetNextEmployee()
             {
-                return new KeyValuePair<string, JsonNode>("sample property", new JsonString());
+                return new KeyValuePair<string, JsonNode>("employee" + Id++, new JsonObject());
+            }
+
+            public static IEnumerable<KeyValuePair<string, JsonNode>> GetTenBestEmployees()
+            {
+                for (int i = 0; i < 10; i++)
+                    yield return GetNextEmployee();
             }
         }
 
+        /// <summary>
+        /// Creating simple Json object
+        /// </summary>
         [Fact]
         public static void TestCreatingJsonObject()
         {
-            var simpleJsonObject = new JsonObject
+            var developer = new JsonObject
             {
                 { "name", "Kasia" },
                 { "age", 22 },
                 { "is developer", true },
-                //todo: { "null property", null }, error: ambiguous call
+                /*  TODO: { "null property", null }, error: ambiguous call
+                    possible solutions: 
+                        "null" -> string
+                        nullable annotation only to one of the types possible as arguments? */  
             };
         }
 
+        /// <summary>
+        /// Creating nested Json object
+        /// </summary>
         [Fact]
         public static void TestCreatingNestedJsonObject()
         {
-            var nestedJsonObject = new JsonObject
+            var person = new JsonObject
             {
-                { "regular", "property" },
+                { "name", "John" },
+                { "surname", "Smith" },
                 {
-                    "nested", new JsonObject()
+                    "phone numbers", new JsonObject()
                     {
-                        { "inner", "property" }
+                        { "work", "123-456-7890" },
+                        { "home", "123-456-7890" }
                     }
                 }
             };
         }
 
         /// <summary>
-        /// Adding KeyValuePair 
+        /// Adding KeyValuePair from external library
         /// </summary>
         [Fact]
         public static void TestAddingKeyValuePair()
         {
-            var nestedJsonObject = new JsonObject
+            var employees = new JsonObject
             {
-                SampleExternalLibrary.GetJsonProperty(),
-                SampleExternalLibrary.GetJsonProperty(),
-                SampleExternalLibrary.GetJsonProperty(),
+                EmployeesDatabase.GetNextEmployee(),
+                EmployeesDatabase.GetNextEmployee(),
+                EmployeesDatabase.GetNextEmployee(),
+                EmployeesDatabase.GetNextEmployee(),
             };
+        }
+
+        /// <summary>
+        /// Adding KeyValuePair from external library
+        /// </summary>
+        [Fact]
+        public static void TestAddingKeyValuePairAfterInitialization()
+        {
+            var employees = new JsonObject();
+            foreach(var employee in EmployeesDatabase.GetTenBestEmployees())
+            {
+                employees.Add(employee);
+            }
         }
     }
 }
