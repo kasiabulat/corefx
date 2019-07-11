@@ -27,6 +27,13 @@ namespace System.Text.Json.Tests
             }
         }
 
+        private enum AvailableStateCodes
+        {
+            WA,
+            CA,
+            NY,
+        }
+
         /// <summary>
         /// Creating simple Json object
         /// </summary>
@@ -60,6 +67,30 @@ namespace System.Text.Json.Tests
                     {
                         { "work", "123-456-7890" },
                         { "home", "123-456-7890" }
+                    }
+                },
+                { 
+                    "addresses", new JsonObject()
+                    {
+                        {
+                            "office", new JsonObject()
+                            {
+                                {  "address line 1", "One Microsoft Way" },
+                                {  "city" , "Redmond" } ,
+                                {  "zip code" , 98052 } ,
+                                {  "state" , (int) AvailableStateCodes.WA }
+                            }
+                        },
+                        { 
+                            "home", new JsonObject()
+                            {
+                                {  "address line 1", "Pear Ave" },
+                                {  "address line 2", "1288" },
+                                {  "city" , "Mountain View" } ,
+                                {  "zip code" , 94043 } ,
+                                {  "state" , (int) AvailableStateCodes.CA }
+                            }
+                        }
                     }
                 }
             };
@@ -108,8 +139,7 @@ namespace System.Text.Json.Tests
         [Fact]
         public static void TestAddingKeyValuePairsCollection()
         {
-            var employees = new JsonObject();
-            employees.AddRange(EmployeesDatabase.GetTenBestEmployees());
+            var employees = new JsonObject(EmployeesDatabase.GetTenBestEmployees());
         }
 
         /// <summary>
@@ -118,7 +148,8 @@ namespace System.Text.Json.Tests
         [Fact]
         public static void TestAddingKeyValuePairsCollectionAfterInitialization()
         {
-            var employees = new JsonObject(EmployeesDatabase.GetTenBestEmployees());
+            var employees = new JsonObject();
+            employees.AddRange(EmployeesDatabase.GetTenBestEmployees());
         }
     }
 }

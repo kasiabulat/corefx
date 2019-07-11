@@ -157,7 +157,7 @@ namespace System.Text.Json
 
     public partial class JsonArray : JsonNode
     {
-        
+
     }
 
     public partial class JsonString : JsonNode
