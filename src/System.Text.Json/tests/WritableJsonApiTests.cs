@@ -155,6 +155,58 @@ namespace System.Text.Json.Tests
         }
 
         /// <summary>
+        /// Creating Json array
+        /// </summary>
+        [Fact]
+        public static void TestCreatingJsonArray()
+        {
+            var preferences = new JsonObject()
+            {
+                // TODO: can this be made acceptable: {  "colours", { "red", "green", "purple" } },
+                { "colours", new JsonArray{ "red", "green", "purple" } },
+                { "numbers", new JsonArray{ 123, 19 } },
+                { "varia", new JsonArray{ 17, "green", true } }
+            };
+        }
+
+        /// <summary>
+        /// Creating nested Json array
+        /// </summary>
+        [Fact]
+        public static void TestCreatingNestedJsonArray()
+        {
+            var vertices = new JsonArray()
+            {
+                new JsonArray
+                {
+                    new JsonArray
+                    {
+                        new JsonArray { 0, 0, 0 },
+                        new JsonArray { 0, 0, 1 }
+                    },
+                    new JsonArray
+                    {
+                        new JsonArray { 0, 1, 0 },
+                        new JsonArray { 0, 1, 1 }
+                    }
+                },
+                new JsonArray
+                {
+                    new JsonArray
+                    {
+                        new JsonArray { 1, 0, 0 },
+                        new JsonArray { 1, 0, 1 }
+                    },
+                    new JsonArray
+                    {
+                        new JsonArray { 1, 1, 0 },
+                        new JsonArray { 1, 1, 1 }
+                    }
+                },
+            };
+        }
+
+        /// <summary>
         /// Adding values to JsonArray
         /// </summary>
         [Fact]
