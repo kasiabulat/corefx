@@ -66,6 +66,15 @@ namespace System.Text.Json.Tests
         }
 
         /// <summary>
+        /// Defining as KeyValuePair value
+        /// </summary>
+        [Fact]
+        public static void TestAssignmentDefinition()
+        {
+            var employee = EmployeesDatabase.GetNextEmployee().Value;
+        }
+
+        /// <summary>
         /// Adding KeyValuePair from external library
         /// </summary>
         [Fact]
@@ -81,7 +90,7 @@ namespace System.Text.Json.Tests
         }
 
         /// <summary>
-        /// Adding KeyValuePair from external library
+        /// Adding KeyValuePair from external library after initialization
         /// </summary>
         [Fact]
         public static void TestAddingKeyValuePairAfterInitialization()
@@ -91,6 +100,25 @@ namespace System.Text.Json.Tests
             {
                 employees.Add(employee);
             }
+        }
+
+        /// <summary>
+        /// Adding KeyValuePairs collection from external library
+        /// </summary>
+        [Fact]
+        public static void TestAddingKeyValuePairsCollection()
+        {
+            var employees = new JsonObject();
+            employees.AddRange(EmployeesDatabase.GetTenBestEmployees());
+        }
+
+        /// <summary>
+        /// Adding KeyValuePairs collection from external library after initialization
+        /// </summary>
+        [Fact]
+        public static void TestAddingKeyValuePairsCollectionAfterInitialization()
+        {
+            var employees = new JsonObject(EmployeesDatabase.GetTenBestEmployees());
         }
     }
 }

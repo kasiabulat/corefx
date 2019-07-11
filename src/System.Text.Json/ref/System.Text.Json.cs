@@ -140,10 +140,14 @@ namespace System.Text.Json
 
     public partial class JsonObject : JsonNode, IEnumerable<KeyValuePair<string, JsonNode>>
     {
+        public JsonObject() { }
+        public JsonObject(IEnumerable<KeyValuePair<string, JsonNode>> jsonProperties) { }
+
         public IEnumerator<KeyValuePair<string, JsonNode>> GetEnumerator() { throw null; }
         IEnumerator IEnumerable.GetEnumerator() { throw null; }
 
         public void Add(KeyValuePair<string, JsonNode> jsonProperty) { }
+        public void AddRange(IEnumerable<KeyValuePair<string, JsonNode>> jsonProperties) { }
         public void Add(string propertyName, JsonNode propertyValue) { }
         public void Add(string propertyName, string propertyValue) { }
         public void Add(string propertyName, int propertyValue) { }
