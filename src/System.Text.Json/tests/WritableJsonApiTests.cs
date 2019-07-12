@@ -9,11 +9,15 @@ using System.Text;
 using Microsoft.VisualBasic;
 using Xunit;
 using System.Linq;
+using System.Dynamic;
 
 namespace System.Text.Json.Tests
 {
     public static class WritableJsonApiTests
     {
+        /// <summary>
+        /// Helper class simulating external library
+        /// </summary>
         private static class EmployeesDatabase
         {
             private static int Id = 0;
@@ -26,6 +30,70 @@ namespace System.Text.Json.Tests
             {
                 for (int i = 0; i < 10; i++)
                     yield return GetNextEmployee();
+            }
+
+            /// <summary>
+            /// Returns following JsonObject:
+            /// {
+            ///     { "name" : "John" }
+            ///     { "phone numbers" : { "work" :  "123-456-7890", "home": "123-456-7890"  } }
+            ///     { 
+            ///         "reporting employees" : 
+            ///         {
+            ///             "software developers" :
+            ///             {
+            ///                 "full time employees" : /JsonObject of 3 employees fromk database/ 
+            ///                 "intern employees" : /JsonObject of 2 employees fromk database/ 
+            ///             },
+            ///             "HR" : /JsonObject of 10 employees fromk database/ 
+            ///         }
+            /// </summary>
+            /// <returns></returns>
+            public static JsonObject GetManager()
+            {
+                return new JsonObject
+                {
+                    { "name", "John" },
+                    {
+                        "phone numbers", new JsonObject()
+                        {
+                            { "work", "123-456-7890" }, { "home", "123-456-7890" }
+                        }
+                    },
+                    {
+                        "reporting employees", new JsonObject()
+                        {
+                            {
+                                "software developers", new JsonObject()
+                                {
+                                    {
+                                        "full time employees", new JsonObject()
+                                        {
+                                            EmployeesDatabase.GetNextEmployee(),
+                                            EmployeesDatabase.GetNextEmployee(),
+                                            EmployeesDatabase.GetNextEmployee(),
+                                        }
+                                    },
+                                    {
+                                        "intern employees", new JsonObject()
+                                        {
+                                            EmployeesDatabase.GetNextEmployee(),
+                                            EmployeesDatabase.GetNextEmployee(),
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "HR", new JsonObject()
+                                {
+                                    {
+                                        "full time employees", new JsonObject(EmployeesDatabase.GetTenBestEmployees())
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
             }
         }
 
@@ -47,6 +115,21 @@ namespace System.Text.Json.Tests
                 { "name", "Kasia" },
                 { "age", 22 },
                 { "is developer", true },
+                // { "null property", null } -> ambiguous call, desired behaviour
+            };
+        }
+
+        /// <summary>
+        /// Creating simple Json object by new methods on primary types
+        /// </summary>
+        [Fact]
+        public static void TestCreatingJsonObjectNewMethods()
+        {
+            var developer = new JsonObject
+            {
+                { "name", new JsonString("Kasia") },
+                { "age", new JsonNumber(22) },
+                { "is developer", new JsonBool(true) },
                 { "null property", new JsonNull() }
             };
         }
@@ -232,6 +315,87 @@ namespace System.Text.Json.Tests
         public static void TestCreatingJsonArrayFromCollectionOfString()
         {
             var employeesIds = new JsonArray(EmployeesDatabase.GetTenBestEmployees().Select(employee => employee.Key));
+        }
+
+        /// <summary>
+        /// Modifying Json object's primnary types
+        /// </summary>
+        [Fact]
+        public static void ModifyingJsonObjectPrimaryTypes()
+        {
+            var person = new JsonObject
+            {
+                { "name", "John" },
+                { "age", 45 },
+                { "is_married", true }
+            };
+
+            // Assign by creating a new instance of primary Json type
+            person["name"] = new JsonString("Bob");
+
+            // Assign by using an implicit operator on primary Json type
+            JsonNumber newAge = 55;
+            person["age"] = newAge;
+
+            // Assign by explicit cast from Json primary type
+            person["is_married"] = (JsonBool) true;
+
+            // Not possible scenario (wold require implicit cast operators in JsonNode):
+            // person["name"] = "Bob";
+        }
+
+        /// <summary>
+        /// Accesing nested Json object - casting with as operator
+        /// </summary>
+        [Fact]
+        public static void AccesingNestedJsonObjectCastWithAs()
+        {
+            // Casting with as operator
+            var manager = EmployeesDatabase.GetManager();
+
+            var reportingEmployees = manager["reporting employees"] as JsonObject;
+            if (reportingEmployees == null) throw new InvalidCastException();
+
+            var softwareDevelopers = reportingEmployees["software developers"] as JsonObject;
+            if (softwareDevelopers == null)  throw new InvalidCastException();
+
+            var internDevelopers = softwareDevelopers["intern employees"] as JsonObject;
+            if (internDevelopers == null)  throw new InvalidCastException();
+
+            internDevelopers.Add(EmployeesDatabase.GetNextEmployee());
+        }
+
+        /// <summary>
+        /// Accesing nested Json object - casting with is operator
+        /// </summary>
+        [Fact]
+        public static void AccesingNestedJsonObjectCastWithIs()
+        {
+            var manager = EmployeesDatabase.GetManager();
+
+            if (manager["reporting employees"] is JsonObject reportingEmployees)
+            {
+                if (reportingEmployees["software developers"] is JsonObject softwareDevelopers)
+                {
+                    if (softwareDevelopers["full time employees"] is JsonObject fullTimeEmployees)
+                    {
+                        fullTimeEmployees.Add(EmployeesDatabase.GetNextEmployee());
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Accesing nested Json object - explicit casting
+        /// </summary>
+        [Fact]
+        public static void AccesingNestedJsonObjectExplicitCast()
+        {
+            // Casting with as operator
+            var manager = EmployeesDatabase.GetManager();
+
+            // Casting with explicit cast
+            ((JsonObject)((JsonObject)manager["reporting employees"])["HR"]).Add(EmployeesDatabase.GetNextEmployee());
         }
     }
 }

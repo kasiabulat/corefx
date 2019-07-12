@@ -144,6 +144,7 @@ namespace System.Text.Json
         public JsonObject() { }
         public JsonObject(IEnumerable<KeyValuePair<string, JsonNode>> jsonProperties) { }
 
+        public JsonNode this[string key] { get => throw null; set => throw null; }
         public IEnumerator<KeyValuePair<string, JsonNode>> GetEnumerator() { throw null; }
         IEnumerator IEnumerable.GetEnumerator() { throw null; }
 
@@ -161,6 +162,7 @@ namespace System.Text.Json
         public JsonArray(IEnumerable<JsonNode> jsonValues) { }
         public JsonArray(IEnumerable<object> jsonValues) { }
 
+        public JsonNode this[int idx] { get => throw null; set => throw null; }
         public IEnumerator<JsonNode> GetEnumerator() { throw null; }
         IEnumerator IEnumerable.GetEnumerator() { throw null; }
 
@@ -181,14 +183,14 @@ namespace System.Text.Json
     {
         public JsonBool() { }
         public JsonBool(bool value) { }
-        // public static implicit operator JsonBool(bool value) { return new JsonBool(value); }
+        public static implicit operator JsonBool(bool value) { return new JsonBool(value); }
     }
 
     public partial class JsonNumber : JsonNode
     {
         public JsonNumber() { }
         public JsonNumber(int value) { }
-      //  public static implicit operator JsonNumber(int value) { return new JsonNumber(value); }
+        public static implicit operator JsonNumber(int value) { return new JsonNumber(value); }
     }
 
     public partial class JsonNull : JsonNode
