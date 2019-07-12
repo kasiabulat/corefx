@@ -95,6 +95,8 @@ namespace System.Text.Json.Tests
                     }
                 };
             }
+
+            public static bool CheckSSN(string ssnNumber) => true;
         }
 
         private enum AvailableStateCodes
@@ -315,6 +317,36 @@ namespace System.Text.Json.Tests
         public static void TestCreatingJsonArrayFromCollectionOfString()
         {
             var employeesIds = new JsonArray(EmployeesDatabase.GetTenBestEmployees().Select(employee => employee.Key));
+        }
+
+        /// <summary>
+        /// Contains Checks
+        /// </summary>
+        [Fact]
+        public static void ContainsChecks()
+        {
+            var person = new JsonObject
+            {
+                { "name", "John" },
+                { "ssn", "123456789" }
+            };
+
+            if (person.ContainsProperty("ssn"))
+            {
+                EmployeesDatabase.CheckSSN(person["ssn"].ToString());
+            }
+
+            var enabledOptions = new JsonArray
+            {
+                "readonly",
+                "no cache",
+                "continue on failure"
+            };
+
+            if(enabledOptions.Contains("no cache"))
+            {
+                // do sth without using caching
+            }
         }
 
         /// <summary>

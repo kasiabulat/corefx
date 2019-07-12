@@ -156,6 +156,7 @@ namespace System.Text.Json
         public void Add(string propertyName, bool propertyValue) { }
 
         public bool Remove(string key) { throw null; }
+        public bool ContainsProperty(string propertyName) { throw null; } // ContainsKey?
 
         public bool ModifyPropertyName(string oldName, string newName) { throw null; }
     }
@@ -174,6 +175,8 @@ namespace System.Text.Json
         public void Add(string jsonValue) { }
         public void Add(int jsonValue) { }
         public void Add(bool jsonValue) { }
+
+        public bool Contains(string propertyName) { throw null; }
     }
 
     public partial class JsonString : JsonNode
