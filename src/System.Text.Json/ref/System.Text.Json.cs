@@ -154,8 +154,12 @@ namespace System.Text.Json
         public void Add(string propertyName, string propertyValue) { }
         public void Add(string propertyName, int propertyValue) { }
         public void Add(string propertyName, bool propertyValue) { }
+        public void Add(string propertyName, JsonArray propertyValue) { }
 
-        public bool Remove(string key) { throw null; }
+        public void Add(string propertyName, IEnumerable<JsonNode> propertyValue) { }
+        //public void Add(string propertyName, Array propertyValue) { }
+
+        public bool Remove(string propertyName) { throw null; }
         public bool ContainsProperty(string propertyName) { throw null; } // ContainsKey?
 
         public bool ModifyPropertyName(string oldName, string newName) { throw null; }
@@ -165,7 +169,8 @@ namespace System.Text.Json
     {
         public JsonArray() { }
         public JsonArray(IEnumerable<JsonNode> jsonValues) { }
-        public JsonArray(IEnumerable<object> jsonValues) { }
+        public JsonArray(IEnumerable<string> jsonValues) { }
+        //public JsonArray(IEnumerable<object> jsonValues) { }
 
         public JsonNode this[int idx] { get => throw null; set => throw null; }
         public IEnumerator<JsonNode> GetEnumerator() { throw null; }

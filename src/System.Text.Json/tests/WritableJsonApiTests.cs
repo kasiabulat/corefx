@@ -117,7 +117,7 @@ namespace System.Text.Json.Tests
                 { "name", "Kasia" },
                 { "age", 22 },
                 { "is developer", true },
-                // { "null property", null } -> ambiguous call, desired behaviour
+                { "null property", (JsonNull) null }
             };
         }
 
@@ -244,9 +244,10 @@ namespace System.Text.Json.Tests
         {
             var preferences = new JsonObject()
             {
-                { "colours", new JsonArray{ "red", "green", "purple" } },
-                { "numbers", new JsonArray{ 123, 19 } },
-                { "varia", new JsonArray{ 17, "green", true } }
+                { "colours", new JsonArray { "red", "green", "purple" } },
+                { "numbers", new JsonArray { 4, 123, 88 } },
+                { "primeNumbers", new JsonNumber[] { 19, 37 } },
+                { "varia", new JsonArray { 17, "green", true } },
             };
         }
 
@@ -328,7 +329,7 @@ namespace System.Text.Json.Tests
             var person = new JsonObject
             {
                 { "name", "John" },
-                { "ssn", "123456789" }
+                { "ssn", "123456789" },
             };
 
             if (person.ContainsProperty("ssn"))
