@@ -397,5 +397,31 @@ namespace System.Text.Json.Tests
             // Casting with explicit cast
             ((JsonObject)((JsonObject)manager["reporting employees"])["HR"]).Add(EmployeesDatabase.GetNextEmployee());
         }
+
+        /// <summary>
+        /// Modifying Json object key - remove & add
+        /// </summary>
+        [Fact]
+        public static void ModifyingJsonObjectKeyRemoveAdd()
+        {
+            var manager = EmployeesDatabase.GetManager();
+            var reportingEmployees = manager["reporting employees"] as JsonObject;
+
+            var softwareDevelopers = reportingEmployees["software developers"];
+            reportingEmployees.Remove("software developers");
+            reportingEmployees.Add("software engineers", softwareDevelopers);
+        }
+
+        /// <summary>
+        /// Modifying Json object key - modify method
+        /// </summary>
+        [Fact]
+        public static void ModifyingJsonObjectKeyModifyMethod()
+        {
+            var manager = EmployeesDatabase.GetManager();
+            var reportingEmployees = manager["reporting employees"] as JsonObject;
+
+            reportingEmployees.ModifyPropertyName("software developers", "software engineers");
+        }
     }
 }

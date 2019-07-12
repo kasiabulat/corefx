@@ -154,6 +154,10 @@ namespace System.Text.Json
         public void Add(string propertyName, string propertyValue) { }
         public void Add(string propertyName, int propertyValue) { }
         public void Add(string propertyName, bool propertyValue) { }
+
+        public bool Remove(string key) { throw null; }
+
+        public bool ModifyPropertyName(string oldName, string newName) { throw null; }
     }
 
     public partial class JsonArray : JsonNode, IEnumerable<JsonNode>
