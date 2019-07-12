@@ -242,12 +242,36 @@ namespace System.Text.Json.Tests
         [Fact]
         public static void TestCreatingJsonArray()
         {
+            string[] dishes = { "sushi", "pasta", "cucumber soup" };
+
+            var sportsExperienceYears = new JsonObject()
+            {
+                { "skiing", 5 },
+                { "cycling", 8 },
+                { "hiking", 6 },
+                { "chess", 2 },
+                { "skating", 1 },
+            };
+
+            var sports = sportsExperienceYears.Where(sport => ((JsonNumber)sport.Value).GetInt32() > 2).Select(sport => sport.Key);
+
+            var strangeWords = new JsonArray()
+            {
+                "supercalifragilisticexpialidocious",
+                "gladiolus",
+                "albumen",
+                "smaragdine"
+            };
+
             var preferences = new JsonObject()
             {
                 { "colours", new JsonArray { "red", "green", "purple" } },
                 { "numbers", new JsonArray { 4, 123, 88 } },
-                { "primeNumbers", new JsonNumber[] { 19, 37 } },
+                { "prime numbers", new JsonNumber[] { 19, 37 } },
                 { "varia", new JsonArray { 17, "green", true } },
+                { "dishes", new JsonArray(dishes) },
+                { "sports", new JsonArray(sports) },
+                { "strange words", strangeWords.Where(word => ((JsonString)word).ToString().Length < 10) },
             };
         }
 
@@ -344,7 +368,19 @@ namespace System.Text.Json.Tests
                 "continue on failure"
             };
 
-            if(enabledOptions.Contains((JsonString)"no cache"))
+            if(enabledOptions.Contains("no cache"))
+            {
+                // do sth without using caching
+            }
+
+            var requiredOptions = new JsonArray
+            {
+                "readonly",
+                "continue on failure"
+            };
+
+            // if all required options are enabled
+            if(!requiredOptions.Select(option => !enabledOptions.Contains(option)).Any())
             {
                 // do sth without using caching
             }
