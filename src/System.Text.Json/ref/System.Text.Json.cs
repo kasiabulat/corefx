@@ -161,7 +161,7 @@ namespace System.Text.Json
         public bool ModifyPropertyName(string oldName, string newName) { throw null; }
     }
 
-    public partial class JsonArray : JsonNode, IEnumerable<JsonNode>
+    public partial class JsonArray : JsonNode, IList<JsonNode>
     {
         public JsonArray() { }
         public JsonArray(IEnumerable<JsonNode> jsonValues) { }
@@ -176,7 +176,18 @@ namespace System.Text.Json
         public void Add(int jsonValue) { }
         public void Add(bool jsonValue) { }
 
-        public bool Contains(string propertyName) { throw null; }
+        public int Count => throw new NotImplementedException();
+        public bool IsReadOnly => throw new NotImplementedException();
+
+        public int IndexOf(JsonNode item) { throw null; }
+        public void Insert(int index, JsonNode item) { throw null; }
+        public void RemoveAt(int index) { throw null; }
+        public void Clear() { throw null; }
+        public bool Contains(JsonNode jsonValue) { throw null; }
+        // public bool Contains(string jsonValue) { throw null; } -> etc. to be consistent with Adds?
+
+        public void CopyTo(JsonNode[] array, int arrayIndex) { throw null; }
+        public bool Remove(JsonNode item) { throw null; }
     }
 
     public partial class JsonString : JsonNode

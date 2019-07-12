@@ -343,7 +343,7 @@ namespace System.Text.Json.Tests
                 "continue on failure"
             };
 
-            if(enabledOptions.Contains("no cache"))
+            if(enabledOptions.Contains((JsonString)"no cache"))
             {
                 // do sth without using caching
             }
