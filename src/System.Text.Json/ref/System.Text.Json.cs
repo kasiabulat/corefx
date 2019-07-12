@@ -7,6 +7,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace System.Text.Json
 {
@@ -133,9 +134,9 @@ namespace System.Text.Json
     // TODO: consider using nullable annotations
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references
 
-    public partial class JsonNode 
-    {
-
+    public partial class JsonNode
+    {         
+       
     }
 
     public partial class JsonObject : JsonNode, IEnumerable<KeyValuePair<string, JsonNode>>
@@ -152,19 +153,13 @@ namespace System.Text.Json
         public void Add(string propertyName, string propertyValue) { }
         public void Add(string propertyName, int propertyValue) { }
         public void Add(string propertyName, bool propertyValue) { }
-       
     }
 
     public partial class JsonArray : JsonNode, IEnumerable<JsonNode>
     {
         public JsonArray() { }
         public JsonArray(IEnumerable<JsonNode> jsonValues) { }
-        
-        // TODO: check if this can be solved automatically calling JsoonString constructor
-        public JsonArray(IEnumerable<string> jsonValues) { }
-        public JsonArray(IEnumerable<int> jsonValues) { }
-        public JsonArray(IEnumerable<bool> jsonValues) { }
-
+        public JsonArray(IEnumerable<object> jsonValues) { }
 
         public IEnumerator<JsonNode> GetEnumerator() { throw null; }
         IEnumerator IEnumerable.GetEnumerator() { throw null; }
@@ -173,25 +168,27 @@ namespace System.Text.Json
         public void Add(string jsonValue) { }
         public void Add(int jsonValue) { }
         public void Add(bool jsonValue) { }
-
     }
 
     public partial class JsonString : JsonNode
     {
         public JsonString() { }
         public JsonString(string value) { }
-    }
-
-    public partial class JsonNumber : JsonNode
-    {
-        public JsonNumber() { }
-        public JsonNumber(int value) { }
+        public static implicit operator JsonString(string value) { return new JsonString(value); }
     }
 
     public partial class JsonBool : JsonNode
     {
         public JsonBool() { }
         public JsonBool(bool value) { }
+        // public static implicit operator JsonBool(bool value) { return new JsonBool(value); }
+    }
+
+    public partial class JsonNumber : JsonNode
+    {
+        public JsonNumber() { }
+        public JsonNumber(int value) { }
+      //  public static implicit operator JsonNumber(int value) { return new JsonNumber(value); }
     }
 
     public partial class JsonNull : JsonNode

@@ -47,10 +47,7 @@ namespace System.Text.Json.Tests
                 { "name", "Kasia" },
                 { "age", 22 },
                 { "is developer", true },
-                /*  TODO: { "null property", null }, error: ambiguous call
-                    possible solutions: 
-                        "null" -> string
-                        nullable annotation only to one of the types possible as arguments? */  
+                { "null property", new JsonNull() }
             };
         }
 
@@ -162,7 +159,6 @@ namespace System.Text.Json.Tests
         {
             var preferences = new JsonObject()
             {
-                // TODO: can this be made acceptable: {  "colours", { "red", "green", "purple" } },
                 { "colours", new JsonArray{ "red", "green", "purple" } },
                 { "numbers", new JsonArray{ 123, 19 } },
                 { "varia", new JsonArray{ 17, "green", true } }
