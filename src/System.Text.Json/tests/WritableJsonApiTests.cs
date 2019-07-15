@@ -12,9 +12,11 @@ using System.Linq;
 using System.Dynamic;
 using System.Text.Json.Serialization.Tests;
 
-namespace System.Text.Json.Tests
+namespace System.Text.Json
 {
-    public static class WritableJsonApiTests
+#pragma warning disable xUnit1000
+    internal static class WritableJsonApiTests
+#pragma warning enable xUnit1000
     {
         /// <summary>
         /// Helper class simulating external library
@@ -117,7 +119,7 @@ namespace System.Text.Json.Tests
             /// All students have algebra grades, 1/3 of them have C# grades, 1/3 failed, 1/3 didn't take the subject.
             /// </summary>
             /// <returns></returns>
-            public static KeyValuePair<string, JsonObject> GetNextStudent()
+            public static KeyValuePair<string, JsonNode> GetNextStudent()
             {
                 var student = new JsonObject();
 
@@ -154,10 +156,10 @@ namespace System.Text.Json.Tests
                 student.Add("personal data", personalData);
                 student.Add("grades", grades);
 
-                return new KeyValuePair<string, JsonObject>("id" + Id++, student);
+                return new KeyValuePair<string, JsonNode>("id" + Id++, student);
             }
 
-            public static IEnumerable<KeyValuePair<string, JsonObject>> GetTenBestStudents()
+            public static IEnumerable<KeyValuePair<string, JsonNode>> GetTenBestStudents()
             {
                 for (int i = 0; i < 10; i++)
                     yield return GetNextStudent();
@@ -548,7 +550,9 @@ namespace System.Text.Json.Tests
 
             internDevelopers.Add(EmployeesDatabase.GetNextEmployee());
 
-            StudentsDatabase.GetNextStudent().Value.GetProperty("grades").GetProperty("maths")["analysis"] = (JsonNumber) 4;
+            var students = StudentsDatabase.GetNextStudent().Value as JsonObject;
+
+            students.GetProperty("grades").GetProperty("maths")["analysis"] = (JsonNumber) 4;
         }
 
         /// <summary>
@@ -583,7 +587,7 @@ namespace System.Text.Json.Tests
         [Fact]
         public static void TestAquiringAllPropertiesValuesWithSpecificName()
         {
-            var students = new JsonObject(StudentsDatabase.GetTenBestStudents());
+            var students = StudentsDatabase.GetTenBestStudents() as JsonObject;
 
             // Calculating avarage with foreach loop
             var algebraGrades = students.GetAllValuesByPropertyName("algebra");
@@ -613,7 +617,7 @@ namespace System.Text.Json.Tests
         [Fact]
         public static void TestAquiringAllPropertiesValues()
         {
-            var student = StudentsDatabase.GetNextStudent().Value;
+            var student = StudentsDatabase.GetNextStudent().Value as JsonObject;
 
             // Checking if student qualifies to get stipend - must have all grades >= 4
             var allGrades = student.GetProperty("grades").GetAllValues();
