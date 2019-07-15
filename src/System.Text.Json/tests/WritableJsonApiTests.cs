@@ -271,7 +271,7 @@ namespace System.Text.Json.Tests
                 { "varia", new JsonArray { 17, "green", true } },
                 { "dishes", new JsonArray(dishes) },
                 { "sports", new JsonArray(sports) },
-                { "strange words", strangeWords.Where(word => ((JsonString)word).ToString().Length < 10) },
+                { "strange words", strangeWords.Where(word => ((JsonString)word).GetString().Length < 10) },
             };
         }
 
@@ -358,7 +358,7 @@ namespace System.Text.Json.Tests
 
             if (person.ContainsProperty("ssn"))
             {
-                EmployeesDatabase.CheckSSN(person["ssn"].ToString());
+                EmployeesDatabase.CheckSSN(((JsonString)person["ssn"]).GetString());
             }
 
             var enabledOptions = new JsonArray
@@ -460,11 +460,23 @@ namespace System.Text.Json.Tests
         [Fact]
         public static void AccesingNestedJsonObjectExplicitCast()
         {
-            // Casting with as operator
             var manager = EmployeesDatabase.GetManager();
 
-            // Casting with explicit cast
             ((JsonObject)((JsonObject)manager["reporting employees"])["HR"]).Add(EmployeesDatabase.GetNextEmployee());
+        }
+
+        /// <summary>
+        /// Accesing nested Json object - GetNestedProperty method
+        /// </summary>
+        [Fact]
+        public static void AccesingNestedJsonObjectGetNestedPropertyMethod()
+        {
+            var manager = EmployeesDatabase.GetManager();
+            var internDevelopers = manager.GetNestedProperty("reporting employees")
+                                          .GetNestedProperty("software developers")
+                                          .GetNestedProperty("intern employees");
+
+            internDevelopers.Add(EmployeesDatabase.GetNextEmployee());
         }
 
         /// <summary>
@@ -474,7 +486,7 @@ namespace System.Text.Json.Tests
         public static void ModifyingJsonObjectKeyRemoveAdd()
         {
             var manager = EmployeesDatabase.GetManager();
-            var reportingEmployees = manager["reporting employees"] as JsonObject;
+            var reportingEmployees = manager.GetNestedProperty("reporting employees");
 
             var softwareDevelopers = reportingEmployees["software developers"];
             reportingEmployees.Remove("software developers");
@@ -488,7 +500,7 @@ namespace System.Text.Json.Tests
         public static void ModifyingJsonObjectKeyModifyMethod()
         {
             var manager = EmployeesDatabase.GetManager();
-            var reportingEmployees = manager["reporting employees"] as JsonObject;
+            var reportingEmployees = manager.GetNestedProperty("reporting employees");
 
             reportingEmployees.ModifyPropertyName("software developers", "software engineers");
         }

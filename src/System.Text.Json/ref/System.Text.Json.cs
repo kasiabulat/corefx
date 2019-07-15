@@ -177,6 +177,8 @@ namespace System.Text.Json
 
         public bool ModifyPropertyName(string oldName, string newName) { throw null; }
 
+        public JsonObject GetNestedProperty(string propertyName) { throw null; }
+
         public ICollection<string> PropertyNames => throw null;
         public ICollection<JsonNode> Values => throw null;
     }
@@ -275,6 +277,8 @@ namespace System.Text.Json
     {
         public JsonString() { }
         public JsonString(string value) { }
+
+        public string GetString() { throw null; }
         public static implicit operator JsonString(string value) { return new JsonString(value); }
     }
 
@@ -282,6 +286,8 @@ namespace System.Text.Json
     {
         public JsonBool() { }
         public JsonBool(bool value) { }
+
+        public bool GetBool() { throw null; }
         public static implicit operator JsonBool(bool value) { return new JsonBool(value); }
     }
 
