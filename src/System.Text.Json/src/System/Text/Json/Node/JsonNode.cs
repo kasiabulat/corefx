@@ -4,8 +4,10 @@
 
 namespace System.Text.Json.System
 {
+#pragma warning disable CS1591
     public partial class JsonNode
     {
 
     }
+#pragma warning restore CS1591
 }

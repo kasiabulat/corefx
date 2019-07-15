@@ -2,6 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections;
+using System.Collections.Generic;
+
+#pragma warning disable CS1591
+
 namespace System.Text.Json.System.Text
 {
     public partial class JsonObject : JsonNode, IEnumerable<KeyValuePair<string, JsonNode>>
@@ -11,7 +16,6 @@ namespace System.Text.Json.System.Text
 
         public JsonNode this[string key] { get => throw null; set => throw null; }
         public IEnumerator<KeyValuePair<string, JsonNode>> GetEnumerator() { throw null; }
-        IEnumerator IEnumerable.GetEnumerator() { throw null; }
 
         public void AddRange(IEnumerable<KeyValuePair<string, JsonNode>> jsonProperties) { }
         public void Add(KeyValuePair<string, JsonNode> jsonProperty) { }
@@ -46,7 +50,15 @@ namespace System.Text.Json.System.Text
         public IEnumerable<JsonNode> GetAllValuesByPropertyName(string propertyName) { throw null; } // GetAllPropertiesByName? GetAllPropertiesWithName?
         public IEnumerable<JsonNode> GetAllValues() { throw null; }
 
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
         public ICollection<string> PropertyNames => throw null;
         public ICollection<JsonNode> Values => throw null;
     }
+
+#pragma warning restore CS1591
+
 }

@@ -4,8 +4,10 @@
 
 namespace System.Text.Json.System.Text
 {
+#pragma warning disable CS1591
     public partial class JsonNull : JsonNode
     {
 
     }
+#pragma warning restore CS1591
 }

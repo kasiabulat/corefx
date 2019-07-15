@@ -4,6 +4,7 @@
 
 namespace System.Text.Json.System.Text
 {
+#pragma warning disable CS1591
     public partial class JsonNumber : JsonNode
     {
         public JsonNumber() { }
@@ -56,4 +57,5 @@ namespace System.Text.Json.System.Text
 
         public static implicit operator JsonNumber(int value) { return new JsonNumber(value); }
     }
+#pragma warning restore CS1591
 }

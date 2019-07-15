@@ -2,6 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections;
+using System.Collections.Generic;
+
+#pragma warning disable CS1591
+
 namespace System.Text.Json.System.Text
 {
     public partial class JsonArray : JsonNode, IList<JsonNode>
@@ -26,8 +31,6 @@ namespace System.Text.Json.System.Text
         public JsonArray(IEnumerable<ulong> jsonValues) { }
 
         public JsonNode this[int idx] { get => throw null; set => throw null; }
-        public IEnumerator<JsonNode> GetEnumerator() { throw null; }
-        IEnumerator IEnumerable.GetEnumerator() { throw null; }
 
         public void Add(JsonNode jsonValue) { }
         public void Add(string jsonValue) { }
@@ -92,5 +95,20 @@ namespace System.Text.Json.System.Text
         public void Clear() { throw null; }
         public void CopyTo(JsonNode[] array, int arrayIndex) { throw null; }
         public bool Remove(JsonNode item) { throw null; }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<JsonNode> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
     }
+#pragma warning restore CS1591
 }

@@ -4,6 +4,7 @@
 
 namespace System.Text.Json.System.Text
 {
+#pragma warning disable CS1591
     public partial class JsonBool : JsonNode
     {
         public JsonBool() { }
@@ -13,4 +14,5 @@ namespace System.Text.Json.System.Text
 
         public static implicit operator JsonBool(bool value) { return new JsonBool(value); }
     }
+#pragma warning restore CS1591
 }

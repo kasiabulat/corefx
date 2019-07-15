@@ -4,6 +4,7 @@
 
 namespace System.Text.Json.System.Text
 {
+#pragma warning disable CS1591
     public partial class JsonString : JsonNode
     {
         public JsonString() { }
@@ -13,4 +14,5 @@ namespace System.Text.Json.System.Text
 
         public static implicit operator JsonString(string value) { return new JsonString(value); }
     }
+#pragma warning restore CS1591
 }
