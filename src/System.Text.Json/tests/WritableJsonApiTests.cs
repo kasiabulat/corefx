@@ -106,6 +106,57 @@ namespace System.Text.Json.Tests
             NY,
         }
 
+        private static class StudentsDatabase
+        {
+            private static int Id = 0;
+
+            /// <summary>
+            /// Returns JsonObject cointaining two inner JsonObjects: "personal data" (first and last name) 
+            /// and "grades" (grades from subjects grouped into fields of science).
+            /// All students have algebra grades, 1/3 of them have C# grades, 1/3 not passed, 1/3 didn't take the subject.
+            /// </summary>
+            /// <returns></returns>
+            public static KeyValuePair<string, JsonNode> GetNextStudent()
+            {
+                var student = new JsonObject();
+
+                var personalData = new JsonObject();
+                personalData.Add("first namne", "John");
+                personalData.Add("last namne", "Smith");
+
+                var grades = new JsonObject();
+                var random = new Random();
+
+                var mathsGrades = new JsonObject();
+                mathsGrades.Add("algebra", random.Next(2, 5));
+                mathsGrades.Add("geometry", random.Next(2, 5));
+                mathsGrades.Add("analysis", random.Next(2, 5));
+
+                var computerScienceGrades = new JsonObject();
+                computerScienceGrades.Add("databases", random.Next(2, 5));
+
+                switch (Id % 3)
+                {
+                    case 0:
+                        computerScienceGrades.Add("C#", random.Next(2, 5));
+                        break;
+                    case 1:
+                        computerScienceGrades.Add("C#", "not passed");
+                        break;
+                    case 2:
+                        break;
+                }
+
+                grades.Add("math", mathsGrades);
+                grades.Add("computer science", computerScienceGrades);
+
+                student.Add("personal data", personalData);
+                student.Add("grades", grades);
+
+                return new KeyValuePair<string, JsonNode>("id" + Id++, student);
+            }
+        }
+
         /// <summary>
         /// Creating simple Json object
         /// </summary>
@@ -348,7 +399,7 @@ namespace System.Text.Json.Tests
         /// Contains Checks
         /// </summary>
         [Fact]
-        public static void ContainsChecks()
+        public static void TestContainsChecks()
         {
             var person = new JsonObject
             {
@@ -390,7 +441,7 @@ namespace System.Text.Json.Tests
         /// Modifying Json object's primnary types
         /// </summary>
         [Fact]
-        public static void ModifyingJsonObjectPrimaryTypes()
+        public static void TestModifyingJsonObjectPrimaryTypes()
         {
             var person = new JsonObject
             {
@@ -417,7 +468,7 @@ namespace System.Text.Json.Tests
         /// Accesing nested Json object - casting with as operator
         /// </summary>
         [Fact]
-        public static void AccesingNestedJsonObjectCastWithAs()
+        public static void TestAccesingNestedJsonObjectCastWithAs()
         {
             // Casting with as operator
             var manager = EmployeesDatabase.GetManager();
@@ -438,7 +489,7 @@ namespace System.Text.Json.Tests
         /// Accesing nested Json object - casting with is operator
         /// </summary>
         [Fact]
-        public static void AccesingNestedJsonObjectCastWithIs()
+        public static void TestAccesingNestedJsonObjectCastWithIs()
         {
             var manager = EmployeesDatabase.GetManager();
 
@@ -458,7 +509,7 @@ namespace System.Text.Json.Tests
         /// Accesing nested Json object - explicit casting
         /// </summary>
         [Fact]
-        public static void AccesingNestedJsonObjectExplicitCast()
+        public static void TestAccesingNestedJsonObjectExplicitCast()
         {
             var manager = EmployeesDatabase.GetManager();
 
@@ -469,7 +520,7 @@ namespace System.Text.Json.Tests
         /// Accesing nested Json object - GetNestedProperty method
         /// </summary>
         [Fact]
-        public static void AccesingNestedJsonObjectGetNestedPropertyMethod()
+        public static void TestAccesingNestedJsonObjectGetNestedPropertyMethod()
         {
             var manager = EmployeesDatabase.GetManager();
             var internDevelopers = manager.GetNestedProperty("reporting employees")
@@ -483,7 +534,7 @@ namespace System.Text.Json.Tests
         /// Modifying Json object key - remove & add
         /// </summary>
         [Fact]
-        public static void ModifyingJsonObjectKeyRemoveAdd()
+        public static void TestModifyingJsonObjectKeyRemoveAdd()
         {
             var manager = EmployeesDatabase.GetManager();
             var reportingEmployees = manager.GetNestedProperty("reporting employees");
@@ -497,12 +548,48 @@ namespace System.Text.Json.Tests
         /// Modifying Json object key - modify method
         /// </summary>
         [Fact]
-        public static void ModifyingJsonObjectKeyModifyMethod()
+        public static void TestModifyingJsonObjectKeyModifyMethod()
         {
             var manager = EmployeesDatabase.GetManager();
             var reportingEmployees = manager.GetNestedProperty("reporting employees");
 
             reportingEmployees.ModifyPropertyName("software developers", "software engineers");
+        }
+
+        /// <summary>
+        /// Aquiring all values of properties with the same name
+        /// </summary>
+        [Fact]
+        public static void TestAquiringAllPropertiesValusWithSpecificName()
+        {
+            var students = new JsonObject();
+
+            students.Add(StudentsDatabase.GetNextStudent());
+            students.Add(StudentsDatabase.GetNextStudent());
+            students.Add(StudentsDatabase.GetNextStudent());
+            students.Add(StudentsDatabase.GetNextStudent());
+            students.Add(StudentsDatabase.GetNextStudent());
+
+            // Counting avarage with foreach loop
+            var algebraGrades = students.GetAllValuesByPropertyName("algebra");
+
+            long gradesSum = 0;
+            foreach(var grade in algebraGrades)
+            {
+                if (grade is JsonNumber gradeAsNumber)
+                    gradesSum += gradeAsNumber.GetInt32();
+            }
+            if (algebraGrades.Count() != 0)
+            {
+                var avarage = gradesSum / algebraGrades.Count();
+            }
+
+            // Counting avarage with aggregate
+            var csharpGrades = students.GetAllValuesByPropertyName("C#");
+            var csharpGradesAvarage = (csharpGrades.Count() == 0) ? 0 : 
+                                        (csharpGrades.Aggregate(0, (sum, grade) => 
+                                            grade is JsonNumber gradeAsNumber ? sum + gradeAsNumber.GetInt32() : sum)
+                                        / csharpGrades.Count());
         }
     }
 }
