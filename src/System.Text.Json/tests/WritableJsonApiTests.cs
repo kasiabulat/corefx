@@ -102,13 +102,9 @@ namespace System.Text.Json
             public static bool CheckSSN(string ssnNumber) => true;
         }
 
-        private enum AvailableStateCodes
-        {
-            WA,
-            CA,
-            NY,
-        }
-
+        /// <summary>
+        /// Helper class simulating external library
+        /// </summary>
         private static class StudentsDatabase
         {
             private static int Id = 0;
@@ -116,7 +112,6 @@ namespace System.Text.Json
             /// <summary>
             /// Returns JsonObject cointaining two inner JsonObjects: "personal data" (first and last name) 
             /// and "grades" (grades from subjects grouped into fields of science).
-            /// All students have algebra grades, 1/3 of them have C# grades, 1/3 failed, 1/3 didn't take the subject.
             /// </summary>
             /// <returns></returns>
             public static KeyValuePair<string, JsonNode> GetNextStudent()
@@ -133,7 +128,7 @@ namespace System.Text.Json
                 var mathsGrades = new JsonObject();
                 mathsGrades.Add("algebra", random.Next(2, 5));
                 mathsGrades.Add("geometry", random.Next(2, 5));
-                mathsGrades.Add("analysis", random.Next(2, 5));
+                mathsGrades.Add("analysis", "passed");
 
                 var computerScienceGrades = new JsonObject();
                 computerScienceGrades.Add("databases", random.Next(2, 5));
@@ -166,13 +161,14 @@ namespace System.Text.Json
             }
         }
 
-        private static class Mailbox
+        /// <summary>
+        /// Helper class simulating enum
+        /// </summary>
+        private enum AvailableStateCodes
         {
-            public static void SendAllStudentsData(JsonDocument studentsData) { throw null; }
-            public static JsonDocument RetrieveAllStudentsData() { throw null; }
-
-            public static void SendStudentData(JsonElement studentData) { throw null; }
-            public static JsonElement RetrieveStudentData() { throw null; }
+            WA,
+            CA,
+            NY,
         }
 
         /// <summary>
@@ -414,10 +410,10 @@ namespace System.Text.Json
         }
 
         /// <summary>
-        /// Contains Checks
+        /// Contains checks
         /// </summary>
         [Fact]
-        public static void TestContainsChecks()
+        public static void TestContains()
         {
             var person = new JsonObject
             {
@@ -547,16 +543,14 @@ namespace System.Text.Json
             var internDevelopers = manager.GetProperty("reporting employees")
                                           .GetProperty("software developers")
                                           .GetProperty("intern employees");
-
             internDevelopers.Add(EmployeesDatabase.GetNextEmployee());
 
             var students = StudentsDatabase.GetNextStudent().Value as JsonObject;
-
             students.GetProperty("grades").GetProperty("maths")["analysis"] = (JsonNumber) 4;
         }
 
         /// <summary>
-        /// Modifying Json object key - remove & add
+        /// Modifying Json object key - remove and add
         /// </summary>
         [Fact]
         public static void TestModifyingJsonObjectKeyRemoveAdd()
@@ -579,6 +573,31 @@ namespace System.Text.Json
             var reportingEmployees = manager.GetProperty("reporting employees");
 
             reportingEmployees.ModifyPropertyName("software developers", "software engineers");
+        }
+
+        /// <summary>
+        /// Aquiring all values
+        /// </summary>
+        [Fact]
+        public static void TestAquiringAllPropertiesValues()
+        {
+            var student = StudentsDatabase.GetNextStudent().Value as JsonObject;
+
+            // Checking if student qualifies to get stipend - must have all grades >= 4
+            var allGrades = student.GetProperty("grades").GetAllValues();
+            var qualifies = allGrades.Aggregate(true, (qualifies, grade) =>
+            {
+                switch (grade)
+                {
+                    case JsonNumber numberGrade:
+                        qualifies &= numberGrade.GetInt32() >= 4;
+                        break;
+                    case JsonString textGrade:
+                        qualifies &= textGrade.GetString() != "failed";
+                        break;
+                }
+                return qualifies;
+            });
         }
 
         /// <summary>
@@ -609,31 +628,6 @@ namespace System.Text.Json
                                         (csharpGrades.Aggregate(0, (sum, grade) =>
                                             grade is JsonNumber gradeAsNumber ? sum + gradeAsNumber.GetInt32() : sum)
                                         / csharpGrades.Count());
-        }
-
-        /// <summary>
-        /// Aquiring all values
-        /// </summary>
-        [Fact]
-        public static void TestAquiringAllPropertiesValues()
-        {
-            var student = StudentsDatabase.GetNextStudent().Value as JsonObject;
-
-            // Checking if student qualifies to get stipend - must have all grades >= 4
-            var allGrades = student.GetProperty("grades").GetAllValues();
-            var qualifies = allGrades.Aggregate(true, (qualifies, grade) =>
-            {
-                switch (grade)
-                {
-                    case JsonNumber numberGrade:
-                        qualifies &= numberGrade.GetInt32() >= 4;
-                        break;
-                    case JsonString textGrade:
-                        qualifies &= textGrade.GetString() != "failed";
-                        break;
-                }
-                return qualifies;
-            });
         }
     }
 }

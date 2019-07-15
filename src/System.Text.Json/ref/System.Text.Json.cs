@@ -129,8 +129,6 @@ namespace System.Text.Json
         }
     }
 
-    /* WRITABLE JSON API */
-
     public partial class JsonNode
     {
         
