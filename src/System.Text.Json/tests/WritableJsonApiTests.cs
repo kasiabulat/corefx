@@ -635,33 +635,5 @@ namespace System.Text.Json
                 return qualifies;
             });
         }
-
-        /// <summary>
-        /// Transforming JsoneNode to JsonElement
-        /// </summary>
-        [Fact]
-        public static void TestTransformingJsonNodeToJsonElement()
-        {
-            var studentDataToSend = StudentsDatabase.GetNextStudent().Value;
-            Mailbox.SendStudentData(studentDataToSend.AsJsonElement());
-        }
-
-        /// <summary>
-        /// Transforming JsonElement to JsoneNode
-        /// </summary>
-        [Fact]
-        public static void TestTransformingJsonElementToJsonNode()
-        {
-            var receivedStudentData = JsonElement.DeepCopy(Mailbox.RetrieveStudentData());
-            if(receivedStudentData is JsonObject student)
-            {
-                var mathsGrades = student.GetProperty("grades").GetProperty("maths");
-
-                mathsGrades["analysis"] = (JsonNumber) 4;
-                mathsGrades.Add("logic", 3);
-
-                Mailbox.SendStudentData(student.AsJsonElement());
-            }
-        }
     }
 }

@@ -127,21 +127,13 @@ namespace System.Text.Json
             System.Collections.Generic.IEnumerator<System.Text.Json.JsonProperty> System.Collections.Generic.IEnumerable<System.Text.Json.JsonProperty>.GetEnumerator() { throw null; }
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw null; }
         }
-
-        public bool IsImmutable => throw null;
-        public static JsonNode DeepCopy(JsonElement jsonElement) { throw null; }
-        public static JsonNode DeepCopy(JsonDocument jsonDocument) { throw null; }
-        public static JsonNode DeepCopy(JsonNode jsonNode) { throw null; }
     }
 
     /* WRITABLE JSON API */
 
-    // TODO: consider using nullable annotations
-    // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references
-
     public partial class JsonNode
     {
-        public JsonElement AsJsonElement() { throw null;  }
+        
     }
 
     public partial class JsonObject : JsonNode, IEnumerable<KeyValuePair<string, JsonNode>>
