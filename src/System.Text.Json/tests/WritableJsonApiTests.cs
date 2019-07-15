@@ -155,6 +155,12 @@ namespace System.Text.Json.Tests
 
                 return new KeyValuePair<string, JsonNode>("id" + Id++, student);
             }
+
+            public static IEnumerable<KeyValuePair<string, JsonNode>> GetTenBestStudents()
+            {
+                for (int i = 0; i < 10; i++)
+                    yield return GetNextStudent();
+            }
         }
 
         /// <summary>
@@ -562,15 +568,9 @@ namespace System.Text.Json.Tests
         [Fact]
         public static void TestAquiringAllPropertiesValusWithSpecificName()
         {
-            var students = new JsonObject();
-
-            students.Add(StudentsDatabase.GetNextStudent());
-            students.Add(StudentsDatabase.GetNextStudent());
-            students.Add(StudentsDatabase.GetNextStudent());
-            students.Add(StudentsDatabase.GetNextStudent());
-            students.Add(StudentsDatabase.GetNextStudent());
-
-            // Counting avarage with foreach loop
+            var students = new JsonObject(StudentsDatabase.GetTenBestStudents());
+            
+            // Calculating avarage with foreach loop
             var algebraGrades = students.GetAllValuesByPropertyName("algebra");
 
             long gradesSum = 0;
@@ -584,7 +584,7 @@ namespace System.Text.Json.Tests
                 var avarage = gradesSum / algebraGrades.Count();
             }
 
-            // Counting avarage with aggregate
+            // Calculating avarage with aggregate
             var csharpGrades = students.GetAllValuesByPropertyName("C#");
             var csharpGradesAvarage = (csharpGrades.Count() == 0) ? 0 : 
                                         (csharpGrades.Aggregate(0, (sum, grade) => 
