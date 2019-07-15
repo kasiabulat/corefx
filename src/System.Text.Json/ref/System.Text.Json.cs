@@ -325,6 +325,21 @@ namespace System.Text.Json
         [CLSCompliant(false)]
         public ulong GetUInt64() { throw null; }
 
+        public bool TryGetByte(out byte value) { throw null; }
+        public bool TryGetInt32(out int value) { throw null; }
+        public bool TryGetInt16(out short value) { throw null; }
+        public bool TryGetInt64(out long value) { throw null; }
+        public bool TryGetSingle(out float value) { throw null; }
+        public bool TryGetDouble(out double value) { throw null; }
+        [CLSCompliant(false)]
+        public bool TryGetSByte(out sbyte value) { throw null; }
+        [CLSCompliant(false)]
+        public bool TryGetUInt16(out ushort value) { throw null; }
+        [CLSCompliant(false)]
+        public bool TryGetUInt32(out uint value) { throw null; }
+        [CLSCompliant(false)]
+        public bool TryGetUInt64(out ulong value) { throw null; }
+
         public static implicit operator JsonNumber(int value) { return new JsonNumber(value); }
     }
 
