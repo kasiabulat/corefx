@@ -276,6 +276,7 @@ namespace System.Text.Json
         public JsonString(string value) { }
 
         public string GetString() { throw null; }
+
         public static implicit operator JsonString(string value) { return new JsonString(value); }
     }
 
@@ -285,6 +286,7 @@ namespace System.Text.Json
         public JsonBool(bool value) { }
 
         public bool GetBool() { throw null; }
+
         public static implicit operator JsonBool(bool value) { return new JsonBool(value); }
     }
 
