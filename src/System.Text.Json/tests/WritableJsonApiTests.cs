@@ -113,7 +113,7 @@ namespace System.Text.Json.Tests
             /// <summary>
             /// Returns JsonObject cointaining two inner JsonObjects: "personal data" (first and last name) 
             /// and "grades" (grades from subjects grouped into fields of science).
-            /// All students have algebra grades, 1/3 of them have C# grades, 1/3 not passed, 1/3 didn't take the subject.
+            /// All students have algebra grades, 1/3 of them have C# grades, 1/3 failed, 1/3 didn't take the subject.
             /// </summary>
             /// <returns></returns>
             public static KeyValuePair<string, JsonNode> GetNextStudent()
@@ -141,7 +141,7 @@ namespace System.Text.Json.Tests
                         computerScienceGrades.Add("C#", random.Next(2, 5));
                         break;
                     case 1:
-                        computerScienceGrades.Add("C#", "not passed");
+                        computerScienceGrades.Add("C#", "failed");
                         break;
                     case 2:
                         break;
@@ -210,7 +210,7 @@ namespace System.Text.Json.Tests
                         { "home", "123-456-7890" }
                     }
                 },
-                { 
+                {
                     "addresses", new JsonObject()
                     {
                         {
@@ -222,7 +222,7 @@ namespace System.Text.Json.Tests
                                 {  "state" , (int) AvailableStateCodes.WA }
                             }
                         },
-                        { 
+                        {
                             "home", new JsonObject()
                             {
                                 {  "address line 1", "Pear Ave" },
@@ -268,7 +268,7 @@ namespace System.Text.Json.Tests
         public static void TestAddingKeyValuePairAfterInitialization()
         {
             var employees = new JsonObject();
-            foreach(var employee in EmployeesDatabase.GetTenBestEmployees())
+            foreach (var employee in EmployeesDatabase.GetTenBestEmployees())
             {
                 employees.Add(employee);
             }
@@ -425,7 +425,7 @@ namespace System.Text.Json.Tests
                 "continue on failure"
             };
 
-            if(enabledOptions.Contains("no cache"))
+            if (enabledOptions.Contains("no cache"))
             {
                 // do sth without using caching
             }
@@ -437,7 +437,7 @@ namespace System.Text.Json.Tests
             };
 
             // if all required options are enabled
-            if(!requiredOptions.Select(option => !enabledOptions.Contains(option)).Any())
+            if (!requiredOptions.Select(option => !enabledOptions.Contains(option)).Any())
             {
                 // do sth without using caching
             }
@@ -464,7 +464,7 @@ namespace System.Text.Json.Tests
             person["age"] = newAge;
 
             // Assign by explicit cast from Json primary type
-            person["is_married"] = (JsonBool) true;
+            person["is_married"] = (JsonBool)true;
 
             // Not possible scenario (wold require implicit cast operators in JsonNode):
             // person["name"] = "Bob";
@@ -480,13 +480,16 @@ namespace System.Text.Json.Tests
             var manager = EmployeesDatabase.GetManager();
 
             var reportingEmployees = manager["reporting employees"] as JsonObject;
-            if (reportingEmployees == null) throw new InvalidCastException();
+            if (reportingEmployees == null)
+                throw new InvalidCastException();
 
             var softwareDevelopers = reportingEmployees["software developers"] as JsonObject;
-            if (softwareDevelopers == null)  throw new InvalidCastException();
+            if (softwareDevelopers == null)
+                throw new InvalidCastException();
 
             var internDevelopers = softwareDevelopers["intern employees"] as JsonObject;
-            if (internDevelopers == null)  throw new InvalidCastException();
+            if (internDevelopers == null)
+                throw new InvalidCastException();
 
             internDevelopers.Add(EmployeesDatabase.GetNextEmployee());
         }
@@ -566,15 +569,15 @@ namespace System.Text.Json.Tests
         /// Aquiring all values of properties with the same name
         /// </summary>
         [Fact]
-        public static void TestAquiringAllPropertiesValusWithSpecificName()
+        public static void TestAquiringAllPropertiesValuesWithSpecificName()
         {
             var students = new JsonObject(StudentsDatabase.GetTenBestStudents());
-            
+
             // Calculating avarage with foreach loop
             var algebraGrades = students.GetAllValuesByPropertyName("algebra");
 
             long gradesSum = 0;
-            foreach(var grade in algebraGrades)
+            foreach (var grade in algebraGrades)
             {
                 if (grade is JsonNumber gradeAsNumber)
                     gradesSum += gradeAsNumber.GetInt32();
@@ -586,10 +589,33 @@ namespace System.Text.Json.Tests
 
             // Calculating avarage with aggregate
             var csharpGrades = students.GetAllValuesByPropertyName("C#");
-            var csharpGradesAvarage = (csharpGrades.Count() == 0) ? 0 : 
-                                        (csharpGrades.Aggregate(0, (sum, grade) => 
+            var csharpGradesAvarage = (csharpGrades.Count() == 0) ? 0 :
+                                        (csharpGrades.Aggregate(0, (sum, grade) =>
                                             grade is JsonNumber gradeAsNumber ? sum + gradeAsNumber.GetInt32() : sum)
                                         / csharpGrades.Count());
+        }
+
+        /// Aquiring all values
+        /// </summary>
+        [Fact]
+        public static void TestAquiringAllPropertiesValues()
+        {
+            var student = StudentsDatabase.GetNextStudent().Value as JsonObject;
+
+            // Checking if student qualifies to get stipend - must have all grades >= 4
+            var allGrades = student.GetNestedProperty("grades").GetAllValues();
+            var qualifies = allGrades.Aggregate(true, (qualifies, grade) => {
+                switch (grade)
+                {
+                    case JsonNumber numberGrade:
+                        qualifies &= numberGrade.GetInt32() >= 4;
+                        break;
+                    case JsonString textGrade:
+                        qualifies &= textGrade.GetString() != "failed";
+                        break;
+                }
+                return qualifies;
+            });
         }
     }
 }

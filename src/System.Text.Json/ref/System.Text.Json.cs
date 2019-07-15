@@ -179,6 +179,7 @@ namespace System.Text.Json
 
         public JsonObject GetNestedProperty(string propertyName) { throw null; }
         public IEnumerable<JsonNode> GetAllValuesByPropertyName(string propertyName) { throw null; } // GetAllPropertiesByName? GetAllPropertiesWithName?
+        public IEnumerable<JsonNode> GetAllValues() { throw null; }
 
         public ICollection<string> PropertyNames => throw null;
         public ICollection<JsonNode> Values => throw null;
