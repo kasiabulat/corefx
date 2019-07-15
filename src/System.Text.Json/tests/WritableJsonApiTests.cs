@@ -10,6 +10,7 @@ using Microsoft.VisualBasic;
 using Xunit;
 using System.Linq;
 using System.Dynamic;
+using System.Text.Json.Serialization.Tests;
 
 namespace System.Text.Json.Tests
 {
@@ -116,7 +117,7 @@ namespace System.Text.Json.Tests
             /// All students have algebra grades, 1/3 of them have C# grades, 1/3 failed, 1/3 didn't take the subject.
             /// </summary>
             /// <returns></returns>
-            public static KeyValuePair<string, JsonNode> GetNextStudent()
+            public static KeyValuePair<string, JsonObject> GetNextStudent()
             {
                 var student = new JsonObject();
 
@@ -153,14 +154,23 @@ namespace System.Text.Json.Tests
                 student.Add("personal data", personalData);
                 student.Add("grades", grades);
 
-                return new KeyValuePair<string, JsonNode>("id" + Id++, student);
+                return new KeyValuePair<string, JsonObject>("id" + Id++, student);
             }
 
-            public static IEnumerable<KeyValuePair<string, JsonNode>> GetTenBestStudents()
+            public static IEnumerable<KeyValuePair<string, JsonObject>> GetTenBestStudents()
             {
                 for (int i = 0; i < 10; i++)
                     yield return GetNextStudent();
             }
+        }
+
+        private static class Mailbox
+        {
+            public static void SendAllStudentsData(JsonDocument studentsData) { throw null; }
+            public static JsonDocument RetrieveAllStudentsData() { throw null; }
+
+            public static void SendStudentData(JsonElement studentData) { throw null; }
+            public static JsonElement RetrieveStudentData() { throw null; }
         }
 
         /// <summary>
@@ -526,17 +536,19 @@ namespace System.Text.Json.Tests
         }
 
         /// <summary>
-        /// Accesing nested Json object - GetNestedProperty method
+        /// Accesing nested Json object - GetProperty method
         /// </summary>
         [Fact]
-        public static void TestAccesingNestedJsonObjectGetNestedPropertyMethod()
+        public static void TestAccesingNestedJsonObjectGetPropertyMethod()
         {
             var manager = EmployeesDatabase.GetManager();
-            var internDevelopers = manager.GetNestedProperty("reporting employees")
-                                          .GetNestedProperty("software developers")
-                                          .GetNestedProperty("intern employees");
+            var internDevelopers = manager.GetProperty("reporting employees")
+                                          .GetProperty("software developers")
+                                          .GetProperty("intern employees");
 
             internDevelopers.Add(EmployeesDatabase.GetNextEmployee());
+
+            StudentsDatabase.GetNextStudent().Value.GetProperty("grades").GetProperty("maths")["analysis"] = (JsonNumber) 4;
         }
 
         /// <summary>
@@ -546,7 +558,7 @@ namespace System.Text.Json.Tests
         public static void TestModifyingJsonObjectKeyRemoveAdd()
         {
             var manager = EmployeesDatabase.GetManager();
-            var reportingEmployees = manager.GetNestedProperty("reporting employees");
+            var reportingEmployees = manager.GetProperty("reporting employees");
 
             var softwareDevelopers = reportingEmployees["software developers"];
             reportingEmployees.Remove("software developers");
@@ -560,7 +572,7 @@ namespace System.Text.Json.Tests
         public static void TestModifyingJsonObjectKeyModifyMethod()
         {
             var manager = EmployeesDatabase.GetManager();
-            var reportingEmployees = manager.GetNestedProperty("reporting employees");
+            var reportingEmployees = manager.GetProperty("reporting employees");
 
             reportingEmployees.ModifyPropertyName("software developers", "software engineers");
         }
@@ -595,16 +607,18 @@ namespace System.Text.Json.Tests
                                         / csharpGrades.Count());
         }
 
+        /// <summary>
         /// Aquiring all values
         /// </summary>
         [Fact]
         public static void TestAquiringAllPropertiesValues()
         {
-            var student = StudentsDatabase.GetNextStudent().Value as JsonObject;
+            var student = StudentsDatabase.GetNextStudent().Value;
 
             // Checking if student qualifies to get stipend - must have all grades >= 4
-            var allGrades = student.GetNestedProperty("grades").GetAllValues();
-            var qualifies = allGrades.Aggregate(true, (qualifies, grade) => {
+            var allGrades = student.GetProperty("grades").GetAllValues();
+            var qualifies = allGrades.Aggregate(true, (qualifies, grade) =>
+            {
                 switch (grade)
                 {
                     case JsonNumber numberGrade:
@@ -616,6 +630,34 @@ namespace System.Text.Json.Tests
                 }
                 return qualifies;
             });
+        }
+
+        /// <summary>
+        /// Transforming JsoneNode to JsonElement
+        /// </summary>
+        [Fact]
+        public static void TestTransformingJsonNodeToJsonElement()
+        {
+            var studentDataToSend = StudentsDatabase.GetNextStudent().Value;
+            Mailbox.SendStudentData(studentDataToSend.AsJsonElement());
+        }
+
+        /// <summary>
+        /// Transforming JsonElement to JsoneNode
+        /// </summary>
+        [Fact]
+        public static void TestTransformingJsonElementToJsonNode()
+        {
+            var receivedStudentData = JsonElement.DeepCopy(Mailbox.RetrieveStudentData());
+            if(receivedStudentData is JsonObject student)
+            {
+                var mathsGrades = student.GetProperty("grades").GetProperty("maths");
+
+                mathsGrades["analysis"] = (JsonNumber) 4;
+                mathsGrades.Add("logic", 3);
+
+                Mailbox.SendStudentData(student.AsJsonElement());
+            }
         }
     }
 }
