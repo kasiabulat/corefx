@@ -13,43 +13,43 @@ namespace System.Text.Json
     public partial class JsonArray : JsonNode, IList<JsonNode>
     {
         public JsonArray() { }
-        public JsonArray(IEnumerable<JsonNode> jsonValues) { }
-        public JsonArray(IEnumerable<string> jsonValues) { }
-        public JsonArray(IEnumerable<bool> jsonValues) { }
-        public JsonArray(IEnumerable<byte> jsonValues) { }
-        public JsonArray(IEnumerable<short> jsonValues) { }
-        public JsonArray(IEnumerable<int> jsonValues) { }
-        public JsonArray(IEnumerable<long> jsonValues) { }
-        public JsonArray(IEnumerable<float> jsonValues) { }
-        public JsonArray(IEnumerable<double> jsonValues) { }
+        public JsonArray(IEnumerable<JsonNode> values) { }
+        public JsonArray(IEnumerable<string> values) { }
+        public JsonArray(IEnumerable<bool> values) { }
+        public JsonArray(IEnumerable<byte> values) { }
+        public JsonArray(IEnumerable<short> values) { }
+        public JsonArray(IEnumerable<int> values) { }
+        public JsonArray(IEnumerable<long> values) { }
+        public JsonArray(IEnumerable<float> values) { }
+        public JsonArray(IEnumerable<double> values) { }
         [CLSCompliant(false)]
-        public JsonArray(IEnumerable<sbyte> jsonValues) { }
+        public JsonArray(IEnumerable<sbyte> values) { }
         [CLSCompliant(false)]
-        public JsonArray(IEnumerable<ushort> jsonValues) { }
+        public JsonArray(IEnumerable<ushort> values) { }
         [CLSCompliant(false)]
-        public JsonArray(IEnumerable<uint> jsonValues) { }
+        public JsonArray(IEnumerable<uint> values) { }
         [CLSCompliant(false)]
-        public JsonArray(IEnumerable<ulong> jsonValues) { }
+        public JsonArray(IEnumerable<ulong> values) { }
 
         public JsonNode this[int idx] { get => throw null; set => throw null; }
 
-        public void Add(JsonNode jsonValue) { }
-        public void Add(string jsonValue) { }
-        public void Add(bool jsonValue) { }
-        public void Add(byte jsonValue) { }
-        public void Add(short jsonValue) { }
-        public void Add(int jsonValue) { }
-        public void Add(long jsonValue) { }
-        public void Add(float jsonValue) { }
-        public void Add(double jsonValue) { }
+        public void Add(JsonNode value) { }
+        public void Add(string value) { }
+        public void Add(bool value) { }
+        public void Add(byte value) { }
+        public void Add(short value) { }
+        public void Add(int value) { }
+        public void Add(long value) { }
+        public void Add(float value) { }
+        public void Add(double value) { }
         [CLSCompliant(false)]
-        public void Add(sbyte jsonValue) { }
+        public void Add(sbyte value) { }
         [CLSCompliant(false)]
-        public void Add(ushort jsonValue) { }
+        public void Add(ushort value) { }
         [CLSCompliant(false)]
-        public void Add(uint jsonValue) { }
+        public void Add(uint value) { }
         [CLSCompliant(false)]
-        public void Add(ulong jsonValue) { }
+        public void Add(ulong value) { }
 
         public void Insert(int index, JsonNode item) { throw null; }
         public void Insert(int index, string item) { throw null; }
@@ -69,23 +69,23 @@ namespace System.Text.Json
         [CLSCompliant(false)]
         public void Insert(int index, ulong item) { throw null; }
 
-        public bool Contains(JsonNode jsonValue) { throw null; }
-        public bool Contains(string jsonValue) { throw null; }
-        public bool Contains(bool jsonValue) { throw null; }
-        public bool Contains(byte jsonValue) { throw null; }
-        public bool Contains(short jsonValue) { throw null; }
-        public bool Contains(int jsonValue) { throw null; }
-        public bool Contains(long jsonValue) { throw null; }
-        public bool Contains(float jsonValue) { throw null; }
-        public bool Contains(double jsonValue) { throw null; }
+        public bool Contains(JsonNode value) { throw null; }
+        public bool Contains(string value) { throw null; }
+        public bool Contains(bool value) { throw null; }
+        public bool Contains(byte value) { throw null; }
+        public bool Contains(short value) { throw null; }
+        public bool Contains(int value) { throw null; }
+        public bool Contains(long value) { throw null; }
+        public bool Contains(float value) { throw null; }
+        public bool Contains(double value) { throw null; }
         [CLSCompliant(false)]
-        public bool Contains(sbyte jsonValue) { throw null; }
+        public bool Contains(sbyte value) { throw null; }
         [CLSCompliant(false)]
-        public bool Contains(ushort jsonValue) { throw null; }
+        public bool Contains(ushort value) { throw null; }
         [CLSCompliant(false)]
-        public bool Contains(uint jsonValue) { throw null; }
+        public bool Contains(uint value) { throw null; }
         [CLSCompliant(false)]
-        public bool Contains(ulong jsonValue) { throw null; }
+        public bool Contains(ulong value) { throw null; }
 
         public int Count => throw new NotImplementedException();
         public bool IsReadOnly => throw new NotImplementedException();

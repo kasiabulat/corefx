@@ -12,7 +12,7 @@ namespace System.Text.Json
         public JsonString() { }
         public JsonString(string value) { }
 
-        public string GetString() { throw null; }
+        public string Value { get; set; }
 
         public static implicit operator JsonString(string value) { throw null; }
     }

@@ -7,14 +7,14 @@
 
 namespace System.Text.Json
 {
-    public partial class JsonBool : JsonNode
+    public partial class JsonBoolean : JsonNode
     {
-        public JsonBool() { }
-        public JsonBool(bool value) { }
+        public JsonBoolean() { }
+        public JsonBoolean(bool value) { }
 
-        public bool GetBool() { throw null; }
-
-        public static implicit operator JsonBool(bool value) { throw null; }
+        public bool Value { get; set; }
+        
+        public static implicit operator JsonBoolean(bool value) { throw null; }
     }
 }
 

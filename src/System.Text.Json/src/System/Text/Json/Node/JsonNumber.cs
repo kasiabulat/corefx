@@ -10,7 +10,6 @@ namespace System.Text.Json
     public partial class JsonNumber : JsonNode
     {
         public JsonNumber() { }
-        public JsonNumber(bool value) { }
         public JsonNumber(string value) { }
         public JsonNumber(byte value) { }
         public JsonNumber(short value) { }
@@ -27,6 +26,7 @@ namespace System.Text.Json
         [CLSCompliant(false)]
         public JsonNumber(ulong value) { }
 
+        public string GetString() { throw null; }
         public byte GetByte() { throw null; }
         public int GetInt32() { throw null; }
         public short GetInt16() { throw null; }
@@ -56,6 +56,22 @@ namespace System.Text.Json
         public bool TryGetUInt32(out uint value) { throw null; }
         [CLSCompliant(false)]
         public bool TryGetUInt64(out ulong value) { throw null; }
+
+        public void SetString(string value) { }
+        public void SetByte(byte value) { }
+        public void SetInt32(int value) { }
+        public void SetInt16(short value) { }
+        public void SetInt64(long value) { }
+        public void SetSingle(float value) { }
+        public void SetDouble(double value) { }
+        [CLSCompliant(false)]
+        public void SetSByte(sbyte value) { }
+        [CLSCompliant(false)]
+        public void SetUInt16(ushort value) { }
+        [CLSCompliant(false)]
+        public void SetUInt32(uint value) { }
+        [CLSCompliant(false)]
+        public void SetUInt64(ulong value) { }
 
         public static implicit operator JsonNumber(byte value) { throw null; }
         public static implicit operator JsonNumber(int value) { throw null; }

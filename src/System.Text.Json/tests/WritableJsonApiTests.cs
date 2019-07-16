@@ -201,7 +201,7 @@ namespace System.Text.Json
             {
                 { "name", new JsonString("Kasia") },
                 { "age", new JsonNumber(22) },
-                { "is developer", new JsonBool(true) },
+                { "is developer", new JsonBoolean(true) },
                 { "null property", new JsonNull() }
             };
         }
@@ -363,7 +363,7 @@ namespace System.Text.Json
                 { "varia", new JsonArray { 17, "green", true } },
                 { "dishes", new JsonArray(dishes) },
                 { "sports", new JsonArray(sports) },
-                { "strange words", strangeWords.Where(word => ((JsonString)word).GetString().Length < 10) },
+                { "strange words", strangeWords.Where(word => ((JsonString)word).Value.Length < 10) },
             };
         }
 
@@ -450,7 +450,7 @@ namespace System.Text.Json
 
             if (person.ContainsProperty("ssn"))
             {
-                EmployeesDatabase.CheckSSN(((JsonString)person["ssn"]).GetString());
+                EmployeesDatabase.CheckSSN(((JsonString)person["ssn"]).Value);
             }
 
             var enabledOptions = new JsonArray
@@ -499,7 +499,7 @@ namespace System.Text.Json
             person["age"] = newAge;
 
             // Assign by explicit cast from Json primary type
-            person["is_married"] = (JsonBool)true;
+            person["is_married"] = (JsonBoolean)true;
 
             // Not possible scenario (wold require implicit cast operators in JsonNode):
             // person["name"] = "Bob";
@@ -631,7 +631,7 @@ namespace System.Text.Json
                         qualifies &= numberGrade.GetInt32() >= 4;
                         break;
                     case JsonString textGrade:
-                        qualifies &= textGrade.GetString() != "failed";
+                        qualifies &= textGrade.Value != "failed";
                         break;
                 }
                 return qualifies;
