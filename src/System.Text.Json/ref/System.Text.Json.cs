@@ -359,8 +359,6 @@ namespace System.Text.Json
         public void Add(string propertyName, ulong propertyValue) { }
         public void AddRange(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, System.Text.Json.JsonNode>> jsonProperties) { }
         public bool ContainsProperty(string propertyName) { throw null; }
-        public System.Collections.Generic.IEnumerable<System.Text.Json.JsonNode> GetAllPrimaryTypedValues() { throw null; }
-        public System.Collections.Generic.IEnumerable<System.Text.Json.JsonNode> GetAllValuesByPropertyName(string propertyName) { throw null; }
         public System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string, System.Text.Json.JsonNode>> GetEnumerator() { throw null; }
         public System.Text.Json.JsonObject GetProperty(string propertyName) { throw null; }
         public bool ModifyPropertyName(string oldName, string newName) { throw null; }

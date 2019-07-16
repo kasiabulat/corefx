@@ -108,65 +108,6 @@ namespace System.Text.Json
         }
 
         /// <summary>
-        /// Helper class simulating external library
-        /// </summary>
-        private static class StudentsDatabase
-        {
-            private static int Id = 0;
-
-            /// <summary>
-            /// Returns JsonObject cointaining two inner JsonObjects: "personal data" (first and last name) 
-            /// and "grades" (grades from subjects grouped into fields of science).
-            /// </summary>
-            /// <returns></returns>
-            public static KeyValuePair<string, JsonNode> GetNextStudent()
-            {
-                var student = new JsonObject();
-
-                var personalData = new JsonObject();
-                personalData.Add("first namne", "John");
-                personalData.Add("last namne", "Smith");
-
-                var grades = new JsonObject();
-                var random = new Random();
-
-                var mathsGrades = new JsonObject();
-                mathsGrades.Add("algebra", random.Next(2, 5));
-                mathsGrades.Add("geometry", random.Next(2, 5));
-                mathsGrades.Add("analysis", "passed");
-
-                var computerScienceGrades = new JsonObject();
-                computerScienceGrades.Add("databases", random.Next(2, 5));
-
-                switch (Id % 3)
-                {
-                    case 0:
-                        computerScienceGrades.Add("C#", random.Next(2, 5));
-                        break;
-                    case 1:
-                        computerScienceGrades.Add("C#", "failed");
-                        break;
-                    case 2:
-                        break;
-                }
-
-                grades.Add("math", mathsGrades);
-                grades.Add("computer science", computerScienceGrades);
-
-                student.Add("personal data", personalData);
-                student.Add("grades", grades);
-
-                return new KeyValuePair<string, JsonNode>("id" + Id++, student);
-            }
-
-            public static IEnumerable<KeyValuePair<string, JsonNode>> GetTenBestStudents()
-            {
-                for (int i = 0; i < 10; i++)
-                    yield return GetNextStudent();
-            }
-        }
-
-        /// <summary>
         /// Helper class simulating enum
         /// </summary>
         private enum AvailableStateCodes
@@ -571,9 +512,6 @@ namespace System.Text.Json
                                           .GetProperty("software developers")
                                           .GetProperty("intern employees");
             internDevelopers.Add(EmployeesDatabase.GetNextEmployee());
-
-            var students = StudentsDatabase.GetNextStudent().Value as JsonObject;
-            students.GetProperty("grades").GetProperty("maths")["analysis"] = (JsonNumber) 4;
         }
 
         /// <summary>
@@ -608,64 +546,8 @@ namespace System.Text.Json
         [Fact]
         public static void TestAquiringAllValues()
         {
-            var students = new JsonObject(StudentsDatabase.GetTenBestStudents());
-            var studentsWithoutId = students.Values;
-        }
-
-
-        /// <summary>
-        /// Aquiring all primary typed values
-        /// </summary>
-        [Fact]
-        public static void TestAquiringAllPrimaryTypedValues()
-        {
-            var student = StudentsDatabase.GetNextStudent().Value as JsonObject;
-
-            // Checking if student qualifies to get stipend - must have all grades >= 4
-            var allGrades = student.GetProperty("grades").GetAllPrimaryTypedValues();
-            var qualifies = allGrades.Aggregate(true, (qualifies, grade) =>
-            {
-                switch (grade)
-                {
-                    case JsonNumber numberGrade:
-                        qualifies &= numberGrade.GetInt32() >= 4;
-                        break;
-                    case JsonString textGrade:
-                        qualifies &= textGrade.Value != "failed";
-                        break;
-                }
-                return qualifies;
-            });
-        }
-
-        /// <summary>
-        /// Aquiring all values of properties with the same name
-        /// </summary>
-        [Fact]
-        public static void TestAquiringAllPropertiesValuesWithSpecificName()
-        {
-            var students = StudentsDatabase.GetTenBestStudents() as JsonObject;
-
-            // Calculating avarage with foreach loop
-            var algebraGrades = students.GetAllValuesByPropertyName("algebra");
-
-            long gradesSum = 0;
-            foreach (var grade in algebraGrades)
-            {
-                if (grade is JsonNumber gradeAsNumber)
-                    gradesSum += gradeAsNumber.GetInt32();
-            }
-            if (algebraGrades.Count() != 0)
-            {
-                var avarage = gradesSum / algebraGrades.Count();
-            }
-
-            // Calculating avarage with aggregate
-            var csharpGrades = students.GetAllValuesByPropertyName("C#");
-            var csharpGradesAvarage = (csharpGrades.Count() == 0) ? 0 :
-                                        (csharpGrades.Aggregate(0, (sum, grade) =>
-                                            grade is JsonNumber gradeAsNumber ? sum + gradeAsNumber.GetInt32() : sum)
-                                        / csharpGrades.Count());
+            var employees = new JsonObject(EmployeesDatabase.GetTenBestEmployees());
+            var employeesWithoutId = employees.Values;
         }
     }
 }

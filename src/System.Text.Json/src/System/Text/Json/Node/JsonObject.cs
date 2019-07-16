@@ -48,9 +48,6 @@ namespace System.Text.Json
         public bool ModifyPropertyName(string oldName, string newName) { throw null; }
 
         public JsonObject GetProperty(string propertyName) { throw null; }
-        public IEnumerable<JsonNode> GetAllValuesByPropertyName(string propertyName) { throw null; } // GetAllPropertiesByName? GetAllPropertiesWithName?
-        public IEnumerable<JsonNode> GetAllPrimaryTypedValues() { throw null; }
-        // GetAllValues? GetAllPrimaryTypes? GetAllPrimaryValues? GetAllLeafValues? GetAllInnermostValues? GetAllLeaves?
 
         IEnumerator IEnumerable.GetEnumerator() { throw null;  }
 
