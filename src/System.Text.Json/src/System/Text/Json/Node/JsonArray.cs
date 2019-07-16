@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 #pragma warning disable CS1591
 
-namespace System.Text.Json.System.Text
+namespace System.Text.Json
 {
     public partial class JsonArray : JsonNode, IList<JsonNode>
     {
@@ -86,7 +86,6 @@ namespace System.Text.Json.System.Text
         [CLSCompliant(false)]
         public bool Contains(ulong jsonValue) { throw null; }
 
-
         public int Count => throw new NotImplementedException();
         public bool IsReadOnly => throw new NotImplementedException();
 
@@ -96,19 +95,9 @@ namespace System.Text.Json.System.Text
         public void CopyTo(JsonNode[] array, int arrayIndex) { throw null; }
         public bool Remove(JsonNode item) { throw null; }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        IEnumerator IEnumerable.GetEnumerator() { throw null; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator<JsonNode> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerator<JsonNode> GetEnumerator() { throw null; }
     }
 #pragma warning restore CS1591
 }

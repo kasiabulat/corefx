@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace System.Text.Json.System.Text
+namespace System.Text.Json
 {
 #pragma warning disable CS1591
     public partial class JsonNumber : JsonNode
@@ -55,7 +55,20 @@ namespace System.Text.Json.System.Text
         [CLSCompliant(false)]
         public bool TryGetUInt64(out ulong value) { throw null; }
 
-        public static implicit operator JsonNumber(int value) { return new JsonNumber(value); }
+        public static implicit operator JsonNumber(byte value) { throw null; }
+        public static implicit operator JsonNumber(int value) { throw null; }
+        public static implicit operator JsonNumber(short value) { throw null; }
+        public static implicit operator JsonNumber(long value) { throw null; }
+        public static implicit operator JsonNumber(float value) { throw null; }
+        public static implicit operator JsonNumber(double value) { throw null; }
+        [CLSCompliant(false)]
+        public static implicit operator JsonNumber(sbyte value) { throw null; }
+        [CLSCompliant(false)]
+        public static implicit operator JsonNumber(ushort value) { throw null; }
+        [CLSCompliant(false)]
+        public static implicit operator JsonNumber(uint value) { throw null; }
+        [CLSCompliant(false)]
+        public static implicit operator JsonNumber(ulong value) { throw null; }
     }
 #pragma warning restore CS1591
 }

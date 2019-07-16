@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace System.Text.Json.System.Text
+namespace System.Text.Json
 {
 #pragma warning disable CS1591
     public partial class JsonString : JsonNode
@@ -12,7 +12,7 @@ namespace System.Text.Json.System.Text
 
         public string GetString() { throw null; }
 
-        public static implicit operator JsonString(string value) { return new JsonString(value); }
+        public static implicit operator JsonString(string value) { throw null; }
     }
 #pragma warning restore CS1591
 }

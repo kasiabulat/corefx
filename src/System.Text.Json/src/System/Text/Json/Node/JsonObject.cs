@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 #pragma warning disable CS1591
 
-namespace System.Text.Json.System.Text
+namespace System.Text.Json
 {
     public partial class JsonObject : JsonNode, IEnumerable<KeyValuePair<string, JsonNode>>
     {
@@ -48,12 +48,10 @@ namespace System.Text.Json.System.Text
 
         public JsonObject GetProperty(string propertyName) { throw null; }
         public IEnumerable<JsonNode> GetAllValuesByPropertyName(string propertyName) { throw null; } // GetAllPropertiesByName? GetAllPropertiesWithName?
-        public IEnumerable<JsonNode> GetAllValues() { throw null; }
+        public IEnumerable<JsonNode> GetAllPrimaryTypedValues() { throw null; }
+        // GetAllValues? GetAllPrimaryTypes? GetAllPrimaryValues? GetAllLeafValues? GetAllInnermostValues? GetAllLeaves?
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        IEnumerator IEnumerable.GetEnumerator() { throw null;  }
 
         public ICollection<string> PropertyNames => throw null;
         public ICollection<JsonNode> Values => throw null;

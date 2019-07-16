@@ -11,6 +11,7 @@ using Xunit;
 using System.Linq;
 using System.Dynamic;
 using System.Text.Json.Serialization.Tests;
+using System.ServiceProcess;
 
 namespace System.Text.Json
 {
@@ -202,6 +203,27 @@ namespace System.Text.Json
         }
 
         /// <summary>
+        /// Creating and retriving different numeric values
+        /// </summary>
+        [Fact]
+        public static void TestNumerics()
+        {
+            double PI = 3.14159265359;
+            var circle = new JsonObject
+            {
+                { "radius", 1 },
+                { "length", 2*PI },
+                { "area", PI }
+            };
+
+            JsonNumber bigConstantBoxed = Int64.MaxValue;
+            long bigConstant = bigConstantBoxed.GetInt64();
+
+            var smallValueBoxed = new JsonNumber(17);
+            smallValueBoxed.TryGetInt16(out short smallValue);
+        }
+
+        /// <summary>
         /// Creating nested Json object
         /// </summary>
         [Fact]
@@ -318,6 +340,7 @@ namespace System.Text.Json
                 { "skating", 1 },
             };
 
+            // choose only sports with > 2 experience years
             var sports = sportsExperienceYears.Where(sport => ((JsonNumber)sport.Value).GetInt32() > 2).Select(sport => sport.Key);
 
             var strangeWords = new JsonArray()
@@ -579,12 +602,23 @@ namespace System.Text.Json
         /// Aquiring all values
         /// </summary>
         [Fact]
-        public static void TestAquiringAllPropertiesValues()
+        public static void TestAquiringAllValues()
+        {
+            var students = new JsonObject(StudentsDatabase.GetTenBestStudents());
+            var studentsWithoutId = students.Values;
+        }
+
+
+        /// <summary>
+        /// Aquiring all primary typed values
+        /// </summary>
+        [Fact]
+        public static void TestAquiringAllPrimaryTypedValues()
         {
             var student = StudentsDatabase.GetNextStudent().Value as JsonObject;
 
             // Checking if student qualifies to get stipend - must have all grades >= 4
-            var allGrades = student.GetProperty("grades").GetAllValues();
+            var allGrades = student.GetProperty("grades").GetAllPrimaryTypedValues();
             var qualifies = allGrades.Aggregate(true, (qualifies, grade) =>
             {
                 switch (grade)
