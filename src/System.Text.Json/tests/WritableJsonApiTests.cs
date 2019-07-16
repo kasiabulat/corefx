@@ -2,20 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.WebSockets;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
-using Microsoft.VisualBasic;
-using Xunit;
 using System.Linq;
-using System.Dynamic;
-using System.Text.Json.Serialization.Tests;
-using System.ServiceProcess;
+using Xunit;
+
 
 namespace System.Text.Json
 {
@@ -28,10 +18,10 @@ namespace System.Text.Json
         /// </summary>
         private static class EmployeesDatabase
         {
-            private static int Id = 0;
+            private static int s_id = 0;
             public static KeyValuePair<string, JsonNode> GetNextEmployee()
             {
-                return new KeyValuePair<string, JsonNode>("employee" + Id++, new JsonObject());
+                return new KeyValuePair<string, JsonNode>("employee" + s_id++, new JsonObject());
             }
 
             public static IEnumerable<KeyValuePair<string, JsonNode>> GetTenBestEmployees()
@@ -218,7 +208,7 @@ namespace System.Text.Json
         [Fact]
         public static void TestAssignmentDefinition()
         {
-            var employee = EmployeesDatabase.GetNextEmployee().Value;
+            JsonNode employee = EmployeesDatabase.GetNextEmployee().Value;
         }
 
         /// <summary>
@@ -243,7 +233,7 @@ namespace System.Text.Json
         public static void TestAddingKeyValuePairAfterInitialization()
         {
             var employees = new JsonObject();
-            foreach (var employee in EmployeesDatabase.GetTenBestEmployees())
+            foreach (KeyValuePair<string, JsonNode> employee in EmployeesDatabase.GetTenBestEmployees())
             {
                 employees.Add(employee);
             }
@@ -286,7 +276,7 @@ namespace System.Text.Json
             };
 
             // choose only sports with > 2 experience years
-            var sports = sportsExperienceYears.Where(sport => ((JsonNumber)sport.Value).GetInt32() > 2).Select(sport => sport.Key);
+            IEnumerable<string> sports = sportsExperienceYears.Where(sport => ((JsonNumber)sport.Value).GetInt32() > 2).Select(sport => sport.Key);
 
             var strangeWords = new JsonArray()
             {
@@ -353,7 +343,7 @@ namespace System.Text.Json
         {
             var employeesIds = new JsonArray();
 
-            foreach (var employee in EmployeesDatabase.GetTenBestEmployees())
+            foreach (KeyValuePair<string, JsonNode> employee in EmployeesDatabase.GetTenBestEmployees())
             {
                 employeesIds.Add(employee.Key);
             }
@@ -453,7 +443,7 @@ namespace System.Text.Json
         public static void TestAccesingNestedJsonObjectCastWithAs()
         {
             // Casting with as operator
-            var manager = EmployeesDatabase.GetManager();
+            JsonObject manager = EmployeesDatabase.GetManager();
 
             var reportingEmployees = manager["reporting employees"] as JsonObject;
             if (reportingEmployees == null)
@@ -476,7 +466,7 @@ namespace System.Text.Json
         [Fact]
         public static void TestAccesingNestedJsonObjectCastWithIs()
         {
-            var manager = EmployeesDatabase.GetManager();
+            JsonObject manager = EmployeesDatabase.GetManager();
 
             if (manager["reporting employees"] is JsonObject reportingEmployees)
             {
@@ -496,7 +486,7 @@ namespace System.Text.Json
         [Fact]
         public static void TestAccesingNestedJsonObjectExplicitCast()
         {
-            var manager = EmployeesDatabase.GetManager();
+            JsonObject manager = EmployeesDatabase.GetManager();
 
             ((JsonObject)((JsonObject)manager["reporting employees"])["HR"]).Add(EmployeesDatabase.GetNextEmployee());
         }
@@ -507,8 +497,8 @@ namespace System.Text.Json
         [Fact]
         public static void TestAccesingNestedJsonObjectGetPropertyMethod()
         {
-            var manager = EmployeesDatabase.GetManager();
-            var internDevelopers = manager.GetProperty("reporting employees")
+            JsonObject manager = EmployeesDatabase.GetManager();
+            JsonObject internDevelopers = manager.GetProperty("reporting employees")
                                           .GetProperty("software developers")
                                           .GetProperty("intern employees");
             internDevelopers.Add(EmployeesDatabase.GetNextEmployee());
@@ -520,10 +510,10 @@ namespace System.Text.Json
         [Fact]
         public static void TestModifyingJsonObjectKeyRemoveAdd()
         {
-            var manager = EmployeesDatabase.GetManager();
-            var reportingEmployees = manager.GetProperty("reporting employees");
+            JsonObject manager = EmployeesDatabase.GetManager();
+            JsonObject reportingEmployees = manager.GetProperty("reporting employees");
 
-            var softwareDevelopers = reportingEmployees["software developers"];
+            JsonNode softwareDevelopers = reportingEmployees["software developers"];
             reportingEmployees.Remove("software developers");
             reportingEmployees.Add("software engineers", softwareDevelopers);
         }
@@ -534,8 +524,8 @@ namespace System.Text.Json
         [Fact]
         public static void TestModifyingJsonObjectKeyModifyMethod()
         {
-            var manager = EmployeesDatabase.GetManager();
-            var reportingEmployees = manager.GetProperty("reporting employees");
+            JsonObject manager = EmployeesDatabase.GetManager();
+            JsonObject reportingEmployees = manager.GetProperty("reporting employees");
 
             reportingEmployees.ModifyPropertyName("software developers", "software engineers");
         }
@@ -547,7 +537,7 @@ namespace System.Text.Json
         public static void TestAquiringAllValues()
         {
             var employees = new JsonObject(EmployeesDatabase.GetTenBestEmployees());
-            var employeesWithoutId = employees.Values;
+            ICollection<JsonNode> employeesWithoutId = employees.Values;
         }
     }
 }
