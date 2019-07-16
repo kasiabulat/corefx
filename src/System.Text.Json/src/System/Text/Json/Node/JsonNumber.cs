@@ -2,9 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+// for now disabling error caused by not adding documentation to methods 
+#pragma warning disable CS1591
+
 namespace System.Text.Json
 {
-#pragma warning disable CS1591
     public partial class JsonNumber : JsonNode
     {
         public JsonNumber() { }
@@ -70,5 +72,6 @@ namespace System.Text.Json
         [CLSCompliant(false)]
         public static implicit operator JsonNumber(ulong value) { throw null; }
     }
-#pragma warning restore CS1591
 }
+
+#pragma warning restore CS1591

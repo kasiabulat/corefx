@@ -5,6 +5,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+// for now disabling error caused by not adding documentation to methods 
 #pragma warning disable CS1591
 
 namespace System.Text.Json
@@ -56,7 +57,6 @@ namespace System.Text.Json
         public ICollection<string> PropertyNames => throw null;
         public ICollection<JsonNode> Values => throw null;
     }
+}
 
 #pragma warning restore CS1591
-
-}
