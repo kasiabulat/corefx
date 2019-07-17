@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace System.Text.Json
 {
-    public partial class JsonArray : JsonNode, IList<JsonNode>
+    public partial class JsonArray : JsonNode, IList<JsonNode>, IReadOnlyList<JsonNode>
     {
         public JsonArray() { }
         public JsonArray(IEnumerable<JsonNode> values) { }
