@@ -15,6 +15,9 @@ namespace System.Text.Json
         public string Value { get; set; }
 
         public static implicit operator JsonString(string value) { throw null; }
+
+        public override bool Equals(object obj) { throw null; }
+        public override int GetHashCode() { throw null; }
     }
 }
 

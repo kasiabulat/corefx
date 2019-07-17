@@ -94,6 +94,8 @@ namespace System.Text.Json
         public JsonBoolean() { }
         public JsonBoolean(bool value) { }
         public bool Value { get { throw null; } set { } }
+        public override bool Equals(object obj) { throw null; }
+        public override int GetHashCode() { throw null; }
         public static implicit operator System.Text.Json.JsonBoolean (bool value) { throw null; }
     }
     public enum JsonCommentHandling : byte
@@ -267,8 +269,10 @@ namespace System.Text.Json
         public JsonNumber(uint value) { }
         [System.CLSCompliantAttribute(false)]
         public JsonNumber(ulong value) { }
+        public override bool Equals(object obj) { throw null; }
         public byte GetByte() { throw null; }
         public double GetDouble() { throw null; }
+        public override int GetHashCode() { throw null; }
         public short GetInt16() { throw null; }
         public int GetInt32() { throw null; }
         public long GetInt64() { throw null; }
@@ -432,6 +436,8 @@ namespace System.Text.Json
         public JsonString() { }
         public JsonString(string value) { }
         public string Value { get { throw null; } set { } }
+        public override bool Equals(object obj) { throw null; }
+        public override int GetHashCode() { throw null; }
         public static implicit operator System.Text.Json.JsonString (string value) { throw null; }
     }
     public enum JsonTokenType : byte

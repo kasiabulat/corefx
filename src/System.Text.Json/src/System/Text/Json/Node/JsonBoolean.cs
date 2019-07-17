@@ -13,8 +13,11 @@ namespace System.Text.Json
         public JsonBoolean(bool value) { }
 
         public bool Value { get; set; }
-        
+
         public static implicit operator JsonBoolean(bool value) { throw null; }
+
+        public override bool Equals(object obj) { throw null; }
+        public override int GetHashCode() { throw null; }
     }
 }
 

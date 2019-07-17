@@ -87,6 +87,9 @@ namespace System.Text.Json
         public static implicit operator JsonNumber(uint value) { throw null; }
         [CLSCompliant(false)]
         public static implicit operator JsonNumber(ulong value) { throw null; }
+
+        public override bool Equals(object obj) { throw null; }
+        public override int GetHashCode() { throw null; }
     }
 }
 
