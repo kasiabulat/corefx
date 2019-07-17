@@ -9,7 +9,8 @@ namespace System.Text.Json
 {
     public partial class JsonNode
     {
-
+        public JsonElement AsJsonElement() { throw null; }
+        public JsonDocument AsJsonDocument() { throw null; }
     }
 }
 

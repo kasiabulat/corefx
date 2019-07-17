@@ -133,6 +133,9 @@ namespace System.Text.Json
         public System.Text.Json.JsonElement this[int index] { get { throw null; } }
         public System.Text.Json.JsonValueKind ValueKind { get { throw null; } }
         public System.Text.Json.JsonElement Clone() { throw null; }
+        public static System.Text.Json.JsonNode DeepCopy(System.Text.Json.JsonDocument jsonDocument) { throw null; }
+        public static System.Text.Json.JsonNode DeepCopy(System.Text.Json.JsonElement jsonElement) { throw null; }
+        public static System.Text.Json.JsonNode DeepCopy(System.Text.Json.JsonNode jsonNode) { throw null; }
         public System.Text.Json.JsonElement.ArrayEnumerator EnumerateArray() { throw null; }
         public System.Text.Json.JsonElement.ObjectEnumerator EnumerateObject() { throw null; }
         public int GetArrayLength() { throw null; }
@@ -250,6 +253,8 @@ namespace System.Text.Json
     public partial class JsonNode
     {
         public JsonNode() { }
+        public System.Text.Json.JsonDocument AsJsonDocument() { throw null; }
+        public System.Text.Json.JsonElement AsJsonElement() { throw null; }
     }
     public partial class JsonNumber : System.Text.Json.JsonNode
     {

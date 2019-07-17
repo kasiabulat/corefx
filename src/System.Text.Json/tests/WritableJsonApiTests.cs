@@ -21,7 +21,14 @@ namespace System.Text.Json
             private static int s_id = 0;
             public static KeyValuePair<string, JsonNode> GetNextEmployee()
             {
-                return new KeyValuePair<string, JsonNode>("employee" + s_id++, new JsonObject());
+                var employee = new JsonObject()
+                {
+                    { "name", "John" } ,
+                    { "surname", "Smith"},
+                    { "age", 45 }
+                };
+
+                return new KeyValuePair<string, JsonNode>("employee" + s_id++, employee);
             }
 
             public static IEnumerable<KeyValuePair<string, JsonNode>> GetTenBestEmployees()
@@ -49,52 +56,67 @@ namespace System.Text.Json
             /// <returns></returns>
             public static JsonObject GetManager()
             {
-                return new JsonObject
-                {
-                    { "name", "John" },
+                var manager = GetNextEmployee().Value as JsonObject;
+
+                manager.Add
+                (
+                    "phone numbers",
+                    new JsonObject()
                     {
-                        "phone numbers", new JsonObject()
-                        {
-                            { "work", "123-456-7890" }, { "home", "123-456-7890" }
-                        }
-                    },
+                        { "work", "123-456-7890" }, { "home", "123-456-7890" }
+                    }
+                );
+
+                manager.Add
+                (
+                    "reporting employees", new JsonObject()
                     {
-                        "reporting employees", new JsonObject()
                         {
+                            "software developers", new JsonObject()
                             {
-                                "software developers", new JsonObject()
                                 {
+                                    "full time employees", new JsonObject()
                                     {
-                                        "full time employees", new JsonObject()
-                                        {
-                                            EmployeesDatabase.GetNextEmployee(),
-                                            EmployeesDatabase.GetNextEmployee(),
-                                            EmployeesDatabase.GetNextEmployee(),
-                                        }
-                                    },
+                                        EmployeesDatabase.GetNextEmployee(),
+                                        EmployeesDatabase.GetNextEmployee(),
+                                        EmployeesDatabase.GetNextEmployee(),
+                                    }
+                                },
+                                {
+                                    "intern employees", new JsonObject()
                                     {
-                                        "intern employees", new JsonObject()
-                                        {
-                                            EmployeesDatabase.GetNextEmployee(),
-                                            EmployeesDatabase.GetNextEmployee(),
-                                        }
+                                        EmployeesDatabase.GetNextEmployee(),
+                                        EmployeesDatabase.GetNextEmployee(),
                                     }
                                 }
-                            },
+                            }
+                        },
+                        {
+                            "HR", new JsonObject()
                             {
-                                "HR", new JsonObject()
                                 {
-                                    {
-                                        "full time employees", new JsonObject(EmployeesDatabase.GetTenBestEmployees())
-                                    }
+                                    "full time employees", new JsonObject(EmployeesDatabase.GetTenBestEmployees())
                                 }
                             }
                         }
                     }
-                };
+                );
+
+                return manager;
             }
 
             public static bool CheckSSN(string ssnNumber) => true;
+        }
+
+        /// <summary>
+        /// Helper class simulating sending Json files via network
+        /// </summary>
+        private static class Mailbox
+        {
+            public static void SendEmployeeData(JsonElement employeeData) { throw null; }
+            public static JsonElement RetrieveEmployeeData() { throw null; }
+
+            public static void SendAllEmployeesData(JsonDocument employeesData) { throw null; }
         }
 
         /// <summary>
@@ -466,6 +488,11 @@ namespace System.Text.Json
             string bigNumber = veryBigConstant.GetString();
             veryBigConstant.SetInt16(123);
             short smallNumber = veryBigConstant.GetInt16();
+
+            // Incrementing age:
+            JsonObject employee = EmployeesDatabase.GetManager();
+            var age = ((JsonNumber)employee["age"]).GetInt32();
+            ((JsonNumber)employee["age"]).SetInt32(age + 1);
         }
 
         /// <summary>
@@ -624,6 +651,77 @@ namespace System.Text.Json
             };
 
             IEnumerable<JsonNode> fullTimeEmployees = employees.GetAllProperties("FTE");
+        }
+
+        /// <summary>
+        /// Transforming JsoneNode to JsonElement
+        /// </summary>
+        [Fact]
+        public static void TestTransformingJsonNodeToJsonElement()
+        {
+            var employeeDataToSend = EmployeesDatabase.GetNextEmployee().Value;
+            Mailbox.SendEmployeeData(employeeDataToSend.AsJsonElement());
+        }
+
+        /// <summary>
+        /// Transforming JsonElement to JsoneNode
+        /// </summary>
+        [Fact]
+        public static void TestTransformingJsonElementToJsonNode()
+        {
+            var receivedEmployeeData = JsonElement.DeepCopy(Mailbox.RetrieveEmployeeData());
+            if (receivedEmployeeData is JsonObject employee)
+            {
+                employee["name"] = new JsonString("Bob");
+                Mailbox.SendEmployeeData(employee.AsJsonElement());
+            }
+        }
+
+        /// <summary>
+        /// Transforming JsonDocument to JsoneNode and vice versa
+        /// </summary>
+        [Fact]
+        public static void TestTransformingToFromJsonDocument()
+        {
+            string jsonString = @"
+            {
+                ""employee1"" : 
+                {
+                    ""name"" : ""Ann"",
+                    ""surname"" : ""Predictable"",
+                    ""age"" : 30,                
+                },
+                ""employee2"" : 
+                {
+                    ""name"" : ""Zoe"",
+                    ""surname"" : ""Coder"",
+                    ""age"" : 24,                
+                }
+            }";
+
+            using (JsonDocument employeesToSend = JsonDocument.Parse(jsonString))
+            {
+                // regular send:
+                Mailbox.SendAllEmployeesData(employeesToSend);
+
+                // modified elements send:
+                JsonNode modifiableDocument = JsonElement.DeepCopy(employeesToSend);
+                var employees = modifiableDocument as JsonObject;
+                employees.Add(EmployeesDatabase.GetNextEmployee());
+
+                JsonDocument modifiedEmployeesToSend = employees.AsJsonDocument();
+                Mailbox.SendAllEmployeesData(modifiedEmployeesToSend);
+            }
+        }
+
+        /// <summary>
+        /// Transforming copying JsoneNode
+        /// </summary>
+        [Fact]
+        public static void TestCopyingJsonNode()
+        {
+            JsonObject employee = EmployeesDatabase.GetManager();
+            JsonNode employeeCopy = JsonElement.DeepCopy(employee);
         }
     }
 }
