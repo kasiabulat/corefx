@@ -118,7 +118,7 @@ namespace System.Text.Json
                 { "name", "Kasia" },
                 { "age", 22 },
                 { "is developer", true },
-                { "null property", (JsonNull) null }
+                { "null property", (JsonNode) null }
             };
         }
 
@@ -132,8 +132,7 @@ namespace System.Text.Json
             {
                 { "name", new JsonString("Kasia") },
                 { "age", new JsonNumber(22) },
-                { "is developer", new JsonBoolean(true) },
-                { "null property", new JsonNull() }
+                { "is developer", new JsonBoolean(true) }
             };
         }
 

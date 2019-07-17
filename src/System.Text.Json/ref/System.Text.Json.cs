@@ -249,10 +249,6 @@ namespace System.Text.Json
     {
         public JsonNode() { }
     }
-    public partial class JsonNull : System.Text.Json.JsonNode
-    {
-        public JsonNull() { }
-    }
     public partial class JsonNumber : System.Text.Json.JsonNode
     {
         public JsonNumber() { }
