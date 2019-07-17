@@ -11,6 +11,7 @@ namespace System.Text.Json
     {
         public JsonElement AsJsonElement() { throw null; }
         public JsonDocument AsJsonDocument() { throw null; }
+        public static JsonNode Parse(string json) { throw null; }
     }
 }
 

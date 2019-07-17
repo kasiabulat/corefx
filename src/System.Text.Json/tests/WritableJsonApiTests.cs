@@ -715,7 +715,34 @@ namespace System.Text.Json
         }
 
         /// <summary>
-        /// Transforming copying JsoneNode
+        /// Parsing right to JsonNode if user knows data will be modified
+        /// </summary>
+        [Fact]
+        public static void TestParsingToJsonNode()
+        {
+            string jsonString = @"
+            {
+                ""employee1"" : 
+                {
+                    ""name"" : ""Ann"",
+                    ""surname"" : ""Predictable"",
+                    ""age"" : 30,                
+                },
+                ""employee2"" : 
+                {
+                    ""name"" : ""Zoe"",
+                    ""surname"" : ""Coder"",
+                    ""age"" : 24,                
+                }
+            }";
+
+            JsonObject employees = JsonNode.Parse(jsonString) as JsonObject;
+            employees.Add(EmployeesDatabase.GetNextEmployee());
+            Mailbox.SendAllEmployeesData(employees.AsJsonDocument());
+        }
+
+        /// <summary>
+        /// Copying JsoneNode
         /// </summary>
         [Fact]
         public static void TestCopyingJsonNode()

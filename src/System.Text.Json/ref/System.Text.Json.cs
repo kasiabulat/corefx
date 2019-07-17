@@ -255,6 +255,7 @@ namespace System.Text.Json
         public JsonNode() { }
         public System.Text.Json.JsonDocument AsJsonDocument() { throw null; }
         public System.Text.Json.JsonElement AsJsonElement() { throw null; }
+        public static System.Text.Json.JsonNode Parse(string json) { throw null; }
     }
     public partial class JsonNumber : System.Text.Json.JsonNode
     {
