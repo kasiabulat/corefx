@@ -91,15 +91,17 @@ namespace System.Text.Json
         public bool IsReadOnly => throw new NotImplementedException();
 
         public int IndexOf(JsonNode item) { throw null; }
+        public int LastIndexOf(JsonNode item) { throw null; }
         public void RemoveAt(int index) { throw null; }
         public void Clear() { throw null; }
         public bool Remove(JsonNode item) { throw null; }
 
         /// <summary>
-        /// First by types of nodes, then:
-        /// * JsonStrings lexicographically
-        /// * JsonNumbers ascendingly
+        /// First by types of nodes (JsonBoolean, JsonNumber, JsonString, JsonArray, JsonObject
+        /// then:
         /// * JsonBooleans: first 0s, then 1s
+        /// * JsonNumbers ascendingly
+        /// * JsonStrings lexicographically
         /// </summary>
         public void Sort() { }
         public void Sort(IComparer comparer) { }

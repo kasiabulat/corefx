@@ -84,6 +84,7 @@ namespace System.Text.Json
         public void Insert(int index, uint item) { }
         [System.CLSCompliantAttribute(false)]
         public void Insert(int index, ulong item) { }
+        public int LastIndexOf(System.Text.Json.JsonNode item) { throw null; }
         public bool Remove(System.Text.Json.JsonNode item) { throw null; }
         public void RemoveAt(int index) { }
         public void Sort() { }

@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using Xunit;
 
 
@@ -757,7 +758,7 @@ namespace System.Text.Json
         }
 
         /// <summary>
-        /// Sorting JsonArray
+        /// Sorting string JsonArray
         /// </summary>
         [Fact]
         public static void TestSortingJsonArray()
@@ -777,6 +778,46 @@ namespace System.Text.Json
             {
                 if(employee is JsonString person)
                     HealthCare.CreateMedicalAppointment(person.Value);
+            }
+        }
+
+        /// <summary>
+        /// Sorting multi-typed JsonArray
+        /// </summary>
+        [Fact]
+        public static void TestSortingMultiTypedJsonArray()
+        {
+            var studentGrades = new JsonArray
+            {
+                3,
+                5,
+                4,
+                "not passed",
+                5,
+                3.5,
+                "passed with no grade",
+                "passed with no grade"
+            };
+
+            studentGrades.Sort();
+
+            // Calculate median of grades:
+
+            int lastIdx = 0;
+            while (studentGrades[lastIdx] is JsonNumber)
+                lastIdx++;
+
+            double median;
+
+            if(lastIdx % 2 == 0)
+            {
+                median = ((JsonNumber)studentGrades[lastIdx/2]).GetInt32();
+            }
+            else
+            {
+                double left = ((JsonNumber)studentGrades[lastIdx/2]).GetDouble();
+                double right = ((JsonNumber)studentGrades[lastIdx/2 + 1]).GetDouble();
+                median = (left + right) / 2.0;
             }
         }
     }
