@@ -86,6 +86,8 @@ namespace System.Text.Json
         public void Insert(int index, ulong item) { }
         public bool Remove(System.Text.Json.JsonNode item) { throw null; }
         public void RemoveAt(int index) { }
+        public void Sort() { }
+        public void Sort(System.Collections.IComparer comparer) { }
         void System.Collections.Generic.ICollection<System.Text.Json.JsonNode>.CopyTo(System.Text.Json.JsonNode[] array, int arrayIndex) { }
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw null; }
     }

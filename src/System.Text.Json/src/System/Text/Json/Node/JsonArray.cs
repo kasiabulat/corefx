@@ -95,6 +95,15 @@ namespace System.Text.Json
         public void Clear() { throw null; }
         public bool Remove(JsonNode item) { throw null; }
 
+        /// <summary>
+        /// First by types of nodes, then:
+        /// * JsonStrings lexicographically
+        /// * JsonNumbers ascendingly
+        /// * JsonBooleans: first 0s, then 1s
+        /// </summary>
+        public void Sort() { }
+        public void Sort(IComparer comparer) { }
+
         void ICollection<JsonNode>.CopyTo(JsonNode[] array, int arrayIndex) { throw null; }
         IEnumerator IEnumerable.GetEnumerator() { throw null; }
         public IEnumerator<JsonNode> GetEnumerator() { throw null; }

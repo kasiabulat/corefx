@@ -119,6 +119,11 @@ namespace System.Text.Json
             public static void SendAllEmployeesData(JsonDocument employeesData) { throw null; }
         }
 
+        private static class HealthCare
+        {
+            public static void CreateMedicalAppointment(string personName) { }
+        }
+
         /// <summary>
         /// Helper class simulating enum
         /// </summary>
@@ -749,6 +754,30 @@ namespace System.Text.Json
         {
             JsonObject employee = EmployeesDatabase.GetManager();
             JsonNode employeeCopy = JsonElement.DeepCopy(employee);
+        }
+
+        /// <summary>
+        /// Sorting JsonArray
+        /// </summary>
+        [Fact]
+        public static void TestSortingJsonArray()
+        {
+            var employees = new JsonArray
+            {
+                "Smith John",
+                "Predictable Ann",
+                "Coder Zoe",
+                "Shadow Byron"
+            };
+
+            employees.Sort();
+            
+            // Create medical appointments for employees in alphabetical order
+            foreach (JsonNode employee in employees)
+            {
+                if(employee is JsonString person)
+                    HealthCare.CreateMedicalAppointment(person.Value);
+            }
         }
     }
 }
