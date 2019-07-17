@@ -93,11 +93,10 @@ namespace System.Text.Json
         public int IndexOf(JsonNode item) { throw null; }
         public void RemoveAt(int index) { throw null; }
         public void Clear() { throw null; }
-        public void CopyTo(JsonNode[] array, int arrayIndex) { throw null; }
         public bool Remove(JsonNode item) { throw null; }
 
+        void ICollection<JsonNode>.CopyTo(JsonNode[] array, int arrayIndex) { throw null; }
         IEnumerator IEnumerable.GetEnumerator() { throw null; }
-
         public IEnumerator<JsonNode> GetEnumerator() { throw null; }
     }
 }
