@@ -410,12 +410,12 @@ namespace System.Text.Json
         }
 
         /// <summary>
-        /// Modifying Json object's primnary types
+        /// Replacing Json object's primnary types
         /// </summary>
         [Fact]
-        public static void TestModifyingJsonObjectPrimaryTypes()
+        public static void TestReplacingsonObjectPrimaryTypes()
         {
-            var person = new JsonObject
+            var person1 = new JsonObject
             {
                 { "name", "John" },
                 { "age", 45 },
@@ -423,17 +423,50 @@ namespace System.Text.Json
             };
 
             // Assign by creating a new instance of primary Json type
-            person["name"] = new JsonString("Bob");
+            person1["name"] = new JsonString("Bob");
 
             // Assign by using an implicit operator on primary Json type
             JsonNumber newAge = 55;
-            person["age"] = newAge;
+            person1["age"] = newAge;
 
             // Assign by explicit cast from Json primary type
-            person["is_married"] = (JsonBoolean)true;
+            person1["is_married"] = (JsonBoolean)true;
 
             // Not possible scenario (wold require implicit cast operators in JsonNode):
             // person["name"] = "Bob";
+
+            var person2 = new JsonObject
+            {
+                { "name", new JsonString[]{ "Emily", "Rosalie" } },
+                { "age", 33 },
+                { "is_married", true }
+            };
+
+            // Copy property from another JsonObject
+            person1["age"] = person2["age"];
+
+            // Copy property of different typoe
+            person1["name"] = person2["name"];         
+        }
+
+        /// <summary>
+        /// Modifying Json object's primnary types
+        /// </summary>
+        [Fact]
+        public static void TestModifyingJsonObjectPrimaryTypes()
+        {
+            JsonString name = "previous name";
+            name.Value = "new name";
+
+            bool shouldBeEnabled = true;
+            var isEnabled = new JsonBoolean(false);
+            isEnabled.Value = shouldBeEnabled;
+
+            JsonNumber veryBigConstant = new JsonNumber();
+            veryBigConstant.SetString("1e1000");
+            string bigNumber = veryBigConstant.GetString();
+            veryBigConstant.SetInt16(123);
+            short smallNumber = veryBigConstant.GetInt16();
         }
 
         /// <summary>
@@ -492,16 +525,53 @@ namespace System.Text.Json
         }
 
         /// <summary>
-        /// Accesing nested Json object - GetProperty method
+        /// Accesing nested Json object - GetObjectProperty method
         /// </summary>
         [Fact]
         public static void TestAccesingNestedJsonObjectGetPropertyMethod()
         {
             JsonObject manager = EmployeesDatabase.GetManager();
-            JsonObject internDevelopers = manager.GetProperty("reporting employees")
-                                          .GetProperty("software developers")
-                                          .GetProperty("intern employees");
+            JsonObject internDevelopers = manager.GetObjectProperty("reporting employees")
+                                          .GetObjectProperty("software developers")
+                                          .GetObjectProperty("intern employees");
             internDevelopers.Add(EmployeesDatabase.GetNextEmployee());
+        }
+
+        /// <summary>
+        /// Accesing nested Json object - TryGetObjectProperty method
+        /// </summary>
+        [Fact]
+        public static void TestAccesingNestedJsonObjectTryGetPropertyMethod()
+        {
+            JsonObject manager = EmployeesDatabase.GetManager();
+            if (manager.TryGetObjectProperty("reporting employees", out JsonObject reportingEmployees))
+            {
+                if (reportingEmployees.TryGetObjectProperty("software developers", out JsonObject softwareDevelopers))
+                {
+                    if (softwareDevelopers.TryGetObjectProperty("full time employees", out JsonObject fullTimeEmployees))
+                    {
+                        fullTimeEmployees.Add(EmployeesDatabase.GetNextEmployee());
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Accesing nested Json array - GetArrayProperty method
+        /// </summary>
+        [Fact]
+        public static void TestAccesingNestedJsonArrayGetPropertyMethod()
+        {
+            var issues = new JsonObject()
+            {
+                { "features", new JsonArray{ "new functionality 1", "new functionality 2" } },
+                { "bugs", new JsonArray{ "bug 123", "bug 4566", "bug 821" } },
+                { "tests", new JsonArray{ "code coverage" } },
+            };
+
+            issues.GetArrayProperty("bugs").Add("bug 12356");
+            ((JsonString)issues.GetArrayProperty("features")[0]).Value = "feature 1569";
+            ((JsonString)issues.GetArrayProperty("features")[1]).Value = "feature 56134";
         }
 
         /// <summary>
@@ -511,7 +581,7 @@ namespace System.Text.Json
         public static void TestModifyingJsonObjectKeyRemoveAdd()
         {
             JsonObject manager = EmployeesDatabase.GetManager();
-            JsonObject reportingEmployees = manager.GetProperty("reporting employees");
+            JsonObject reportingEmployees = manager.GetObjectProperty("reporting employees");
 
             JsonNode softwareDevelopers = reportingEmployees["software developers"];
             reportingEmployees.Remove("software developers");
@@ -525,7 +595,7 @@ namespace System.Text.Json
         public static void TestModifyingJsonObjectKeyModifyMethod()
         {
             JsonObject manager = EmployeesDatabase.GetManager();
-            JsonObject reportingEmployees = manager.GetProperty("reporting employees");
+            JsonObject reportingEmployees = manager.GetObjectProperty("reporting employees");
 
             reportingEmployees.ModifyPropertyName("software developers", "software engineers");
         }
@@ -538,6 +608,23 @@ namespace System.Text.Json
         {
             var employees = new JsonObject(EmployeesDatabase.GetTenBestEmployees());
             ICollection<JsonNode> employeesWithoutId = employees.Values;
+        }
+
+        /// <summary>
+        /// Aquiring all properties
+        /// </summary>
+        [Fact]
+        public static void TestAquiringAllProperties()
+        {
+            var employees = new JsonObject()
+            {
+                { "FTE", "John Smith" },
+                { "FTE", "Ann Predictable" },
+                { "Intern", "Zoe Coder" },
+                { "FTE", "Byron Shadow" },
+            };
+
+            IEnumerable<JsonNode> fullTimeEmployees = employees.GetAllProperties("FTE");
         }
     }
 }

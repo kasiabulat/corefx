@@ -65,7 +65,6 @@ namespace System.Text.Json
         public bool Contains(uint value) { throw null; }
         [System.CLSCompliantAttribute(false)]
         public bool Contains(ulong value) { throw null; }
-        public void CopyTo(System.Text.Json.JsonNode[] array, int arrayIndex) { }
         public System.Collections.Generic.IEnumerator<System.Text.Json.JsonNode> GetEnumerator() { throw null; }
         public int IndexOf(System.Text.Json.JsonNode item) { throw null; }
         public void Insert(int index, bool item) { }
@@ -87,6 +86,7 @@ namespace System.Text.Json
         public void Insert(int index, ulong item) { }
         public bool Remove(System.Text.Json.JsonNode item) { throw null; }
         public void RemoveAt(int index) { }
+        void System.Collections.Generic.ICollection<System.Text.Json.JsonNode>.CopyTo(System.Text.Json.JsonNode[] array, int arrayIndex) { }
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw null; }
     }
     public partial class JsonBoolean : System.Text.Json.JsonNode
@@ -359,11 +359,17 @@ namespace System.Text.Json
         public void Add(string propertyName, ulong propertyValue) { }
         public void AddRange(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, System.Text.Json.JsonNode>> jsonProperties) { }
         public bool ContainsProperty(string propertyName) { throw null; }
+        public System.Collections.Generic.IEnumerable<System.Text.Json.JsonNode> GetAllProperties(string propertyName) { throw null; }
+        public System.Text.Json.JsonArray GetArrayProperty(string propertyName) { throw null; }
         public System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string, System.Text.Json.JsonNode>> GetEnumerator() { throw null; }
-        public System.Text.Json.JsonObject GetProperty(string propertyName) { throw null; }
+        public System.Text.Json.JsonObject GetObjectProperty(string propertyName) { throw null; }
+        public System.Text.Json.JsonNode GetProperty(string propertyName) { throw null; }
         public bool ModifyPropertyName(string oldName, string newName) { throw null; }
         public bool Remove(string propertyName) { throw null; }
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw null; }
+        public bool TryGetArrayProperty(string propertyName, out System.Text.Json.JsonArray jsonArray) { throw null; }
+        public bool TryGetObjectProperty(string propertyName, out System.Text.Json.JsonObject jsonObject) { throw null; }
+        public bool TryGetProperty(string propertyName, out System.Text.Json.JsonNode jsonNode) { throw null; }
     }
     public readonly partial struct JsonProperty
     {
