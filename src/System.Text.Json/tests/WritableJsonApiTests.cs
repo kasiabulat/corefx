@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using System.Text.Json.Serialization.Tests;
 using Xunit;
 
 
@@ -107,6 +108,7 @@ namespace System.Text.Json
             }
 
             public static bool CheckSSN(string ssnNumber) => true;
+            public static void PerformHeavyOperations(JsonElement employee) { }
         }
 
         /// <summary>
@@ -665,8 +667,12 @@ namespace System.Text.Json
         [Fact]
         public static void TestTransformingJsonNodeToJsonElement()
         {
+            // Send Json through network
             var employeeDataToSend = EmployeesDatabase.GetNextEmployee().Value;
             Mailbox.SendEmployeeData(employeeDataToSend.AsJsonElement());
+
+            // Send Json that is lightweight and immutable
+            Mailbox.SendEmployeeData(JsonDocument.Parse(employeeDataToSend).RootElement);
         }
 
         /// <summary>
@@ -715,7 +721,7 @@ namespace System.Text.Json
                 var employees = modifiableDocument as JsonObject;
                 employees.Add(EmployeesDatabase.GetNextEmployee());
 
-                JsonDocument modifiedEmployeesToSend = employees.AsJsonDocument();
+                JsonDocument modifiedEmployeesToSend = JsonDocument.Parse(employees);
                 Mailbox.SendAllEmployeesData(modifiedEmployeesToSend);
             }
         }
@@ -744,7 +750,7 @@ namespace System.Text.Json
 
             JsonObject employees = JsonNode.Parse(jsonString) as JsonObject;
             employees.Add(EmployeesDatabase.GetNextEmployee());
-            Mailbox.SendAllEmployeesData(employees.AsJsonDocument());
+            Mailbox.SendAllEmployeesData(JsonDocument.Parse(employees));
         }
 
         /// <summary>
@@ -755,6 +761,22 @@ namespace System.Text.Json
         {
             JsonObject employee = EmployeesDatabase.GetManager();
             JsonNode employeeCopy = JsonElement.DeepCopy(employee);
+        }
+
+        /// <summary>
+        /// Checking IsImmutable property
+        /// </summary>
+        [Fact]
+        public static void TestIsImmutable()
+        {
+            JsonElement employee = Mailbox.RetrieveEmployeeData();
+            if(!employee.IsImmutable)
+            {
+                employee = JsonDocument.Parse(employee).RootElement;
+            }
+
+            // Perform operations requiring high performance
+            EmployeesDatabase.PerformHeavyOperations(employee);
         }
 
         /// <summary>

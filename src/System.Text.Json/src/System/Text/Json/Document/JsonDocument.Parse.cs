@@ -653,6 +653,13 @@ namespace System.Text.Json
             }
         }
 
+
+// for now disabling error caused by not adding documentation to methods 
+#pragma warning disable CS1591
+        public static JsonDocument Parse(JsonNode node) { throw null; }
+        public static JsonDocument Parse(JsonElement node) { throw null; }
+#pragma warning restore CS1591
+
         private static async
 #if BUILDING_INBOX_LIBRARY
             ValueTask<ArraySegment<byte>>

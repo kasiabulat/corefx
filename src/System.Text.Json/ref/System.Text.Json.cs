@@ -117,6 +117,8 @@ namespace System.Text.Json
         public static System.Text.Json.JsonDocument Parse(System.ReadOnlyMemory<byte> utf8Json, System.Text.Json.JsonDocumentOptions options = default(System.Text.Json.JsonDocumentOptions)) { throw null; }
         public static System.Text.Json.JsonDocument Parse(System.ReadOnlyMemory<char> json, System.Text.Json.JsonDocumentOptions options = default(System.Text.Json.JsonDocumentOptions)) { throw null; }
         public static System.Text.Json.JsonDocument Parse(string json, System.Text.Json.JsonDocumentOptions options = default(System.Text.Json.JsonDocumentOptions)) { throw null; }
+        public static System.Text.Json.JsonDocument Parse(System.Text.Json.JsonElement node) { throw null; }
+        public static System.Text.Json.JsonDocument Parse(System.Text.Json.JsonNode node) { throw null; }
         public static System.Threading.Tasks.Task<System.Text.Json.JsonDocument> ParseAsync(System.IO.Stream utf8Json, System.Text.Json.JsonDocumentOptions options = default(System.Text.Json.JsonDocumentOptions), System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { throw null; }
         public static System.Text.Json.JsonDocument ParseValue(ref System.Text.Json.Utf8JsonReader reader) { throw null; }
         public static bool TryParseValue(ref System.Text.Json.Utf8JsonReader reader, out System.Text.Json.JsonDocument document) { throw null; }
@@ -133,6 +135,7 @@ namespace System.Text.Json
     {
         private readonly object _dummy;
         private readonly int _dummyPrimitive;
+        public bool IsImmutable { get { throw null; } }
         public System.Text.Json.JsonElement this[int index] { get { throw null; } }
         public System.Text.Json.JsonValueKind ValueKind { get { throw null; } }
         public System.Text.Json.JsonElement Clone() { throw null; }
@@ -256,7 +259,6 @@ namespace System.Text.Json
     public partial class JsonNode
     {
         public JsonNode() { }
-        public System.Text.Json.JsonDocument AsJsonDocument() { throw null; }
         public System.Text.Json.JsonElement AsJsonElement() { throw null; }
         public static System.Text.Json.JsonNode Parse(string json) { throw null; }
     }

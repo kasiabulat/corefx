@@ -1441,9 +1441,10 @@ namespace System.Text.Json
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string DebuggerDisplay => $"ValueKind = {ValueKind} : \"{ToString()}\"";
 
-// for now disabling error caused by not adding documentation to methods 
+        // for now disabling error caused by not adding documentation to methods 
 #pragma warning disable CS1591
 
+        public bool IsImmutable => throw null;
         public static JsonNode DeepCopy(JsonElement jsonElement) { throw null; }
         public static JsonNode DeepCopy(JsonDocument jsonDocument) { throw null; }
         public static JsonNode DeepCopy(JsonNode jsonNode) { throw null; }
