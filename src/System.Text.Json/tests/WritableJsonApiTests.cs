@@ -116,10 +116,10 @@ namespace System.Text.Json
         /// </summary>
         private static class Mailbox
         {
-            public static void SendEmployeeData(JsonElement employeeData) { throw null; }
-            public static JsonElement RetrieveEmployeeData() { throw null; }
+            public static void SendEmployeeData(JsonElement employeeData) { }
+            public static JsonElement RetrieveEmployeeData() { return EmployeesDatabase.GetNextEmployee().Value.AsJsonElement(); }
 
-            public static void SendAllEmployeesData(JsonDocument employeesData) { throw null; }
+            public static void SendAllEmployeesData(JsonElement employeesData) { }
         }
 
         private static class HealthCare
@@ -499,7 +499,7 @@ namespace System.Text.Json
 
             // Incrementing age:
             JsonObject employee = EmployeesDatabase.GetManager();
-            var age = ((JsonNumber)employee["age"]).GetInt32();
+            int age = ((JsonNumber)employee["age"]).GetInt32();
             ((JsonNumber)employee["age"]).SetInt32(age + 1);
         }
 
@@ -670,13 +670,10 @@ namespace System.Text.Json
             // Send Json through network
             var employeeDataToSend = EmployeesDatabase.GetNextEmployee().Value;
             Mailbox.SendEmployeeData(employeeDataToSend.AsJsonElement());
-
-            // Send Json that is lightweight and immutable
-            Mailbox.SendEmployeeData(JsonDocument.Parse(employeeDataToSend).RootElement);
         }
 
         /// <summary>
-        /// Transforming JsonElement to JsoneNode
+        /// Transforming JsonElement to JsonNode
         /// </summary>
         [Fact]
         public static void TestTransformingJsonElementToJsonNode()
@@ -690,7 +687,7 @@ namespace System.Text.Json
         }
 
         /// <summary>
-        /// Transforming JsonDocument to JsoneNode and vice versa
+        /// Transforming JsonDocument to JsonNode and vice versa
         /// </summary>
         [Fact]
         public static void TestTransformingToFromJsonDocument()
@@ -714,15 +711,14 @@ namespace System.Text.Json
             using (JsonDocument employeesToSend = JsonDocument.Parse(jsonString))
             {
                 // regular send:
-                Mailbox.SendAllEmployeesData(employeesToSend);
+                Mailbox.SendAllEmployeesData(employeesToSend.RootElement);
 
                 // modified elements send:
                 JsonNode modifiableDocument = JsonElement.DeepCopy(employeesToSend);
                 var employees = modifiableDocument as JsonObject;
                 employees.Add(EmployeesDatabase.GetNextEmployee());
 
-                JsonDocument modifiedEmployeesToSend = JsonDocument.Parse(employees);
-                Mailbox.SendAllEmployeesData(modifiedEmployeesToSend);
+                Mailbox.SendAllEmployeesData(employees.AsJsonElement());
             }
         }
 
@@ -750,7 +746,7 @@ namespace System.Text.Json
 
             JsonObject employees = JsonNode.Parse(jsonString) as JsonObject;
             employees.Add(EmployeesDatabase.GetNextEmployee());
-            Mailbox.SendAllEmployeesData(JsonDocument.Parse(employees));
+            Mailbox.SendAllEmployeesData(employees.AsJsonElement());
         }
 
         /// <summary>
@@ -760,7 +756,7 @@ namespace System.Text.Json
         public static void TestCopyingJsonNode()
         {
             JsonObject employee = EmployeesDatabase.GetManager();
-            JsonNode employeeCopy = JsonElement.DeepCopy(employee);
+            JsonNode employeeCopy = JsonNode.DeepCopy(employee);
         }
 
         /// <summary>
@@ -770,13 +766,24 @@ namespace System.Text.Json
         public static void TestIsImmutable()
         {
             JsonElement employee = Mailbox.RetrieveEmployeeData();
-            if(!employee.IsImmutable)
+            if(employee.IsImmutable)
             {
-                employee = JsonDocument.Parse(employee).RootElement;
+                JsonObject employeeNode = JsonNode.GetNode(employee) as JsonObject;
+                employeeNode["received as node"] = (JsonBoolean) true;
             }
+        }
 
-            // Perform operations requiring high performance
-            EmployeesDatabase.PerformHeavyOperations(employee);
+        /// <summary>
+        /// Retrieving JsonNode from JsonElement
+        /// </summary>
+        [Fact]
+        public static void TestTryGetNode()
+        {
+            JsonElement employee = Mailbox.RetrieveEmployeeData();
+            if (JsonNode.TryGetNode(employee, out JsonNode employeeNode))
+            {
+                ((JsonObject)employeeNode)["received as node"] = (JsonBoolean) true;
+            }
         }
 
         /// <summary>
@@ -798,8 +805,10 @@ namespace System.Text.Json
             // Create medical appointments for employees in alphabetical order
             foreach (JsonNode employee in employees)
             {
-                if(employee is JsonString person)
+                if (employee is JsonString person)
+                {
                     HealthCare.CreateMedicalAppointment(person.Value);
+                }
             }
         }
 
@@ -823,24 +832,45 @@ namespace System.Text.Json
 
             studentGrades.Sort();
 
-            // Calculate median of grades:
-
-            int lastIdx = 0;
-            while (studentGrades[lastIdx] is JsonNumber)
-                lastIdx++;
-
-            double median;
-
-            if(lastIdx % 2 == 0)
+            double ComputeMedian(JsonArray grades)
             {
-                median = ((JsonNumber)studentGrades[lastIdx/2]).GetInt32();
+                if ((grades?.Count ?? 0) == 0)
+                {
+                    return double.NaN;
+                }
+
+                grades.Sort();
+
+                int lastIdx = 0;
+                while (grades[lastIdx] is JsonNumber)
+                {
+                    lastIdx++;
+                }
+
+                if (lastIdx == 0)
+                {
+                    return double.NaN;
+                }
+
+                double median;
+
+                if (lastIdx % 2 == 0)
+                {
+                    median = ((JsonNumber)grades[lastIdx / 2]).GetDouble();
+                }
+                else
+                {
+                    double left = ((JsonNumber)grades[lastIdx / 2]).GetDouble();
+                    double right = ((JsonNumber)grades[lastIdx / 2 + 1]).GetDouble();
+                    median = (left + right) / 2.0;
+                }
+
+                return median;
             }
-            else
-            {
-                double left = ((JsonNumber)studentGrades[lastIdx/2]).GetDouble();
-                double right = ((JsonNumber)studentGrades[lastIdx/2 + 1]).GetDouble();
-                median = (left + right) / 2.0;
-            }
+
+            Assert.Equal(4, ComputeMedian(studentGrades));
+            // ComputeMedian sorted the array, the side effect has leaked out:
+            Assert.Equal(3.5, ((JsonNumber)studentGrades[1]).GetDouble());
         }
     }
 }

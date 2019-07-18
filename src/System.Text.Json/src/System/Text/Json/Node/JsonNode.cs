@@ -10,7 +10,12 @@ namespace System.Text.Json
     public partial class JsonNode
     {
         public JsonElement AsJsonElement() { throw null; }
+
+        public static JsonNode GetNode(JsonElement jsonElement) { throw null; }
+        public static bool TryGetNode(JsonElement jsonElement, out JsonNode jsonNode) { throw null; }
+
         public static JsonNode Parse(string json) { throw null; }
+        public static JsonNode DeepCopy(JsonNode jsonNode) { throw null; }
     }
 }
 

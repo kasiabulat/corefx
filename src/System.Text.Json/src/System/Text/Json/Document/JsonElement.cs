@@ -1447,7 +1447,6 @@ namespace System.Text.Json
         public bool IsImmutable => throw null;
         public static JsonNode DeepCopy(JsonElement jsonElement) { throw null; }
         public static JsonNode DeepCopy(JsonDocument jsonDocument) { throw null; }
-        public static JsonNode DeepCopy(JsonNode jsonNode) { throw null; }
 
 #pragma warning restore CS1591
     }

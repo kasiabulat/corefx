@@ -117,8 +117,6 @@ namespace System.Text.Json
         public static System.Text.Json.JsonDocument Parse(System.ReadOnlyMemory<byte> utf8Json, System.Text.Json.JsonDocumentOptions options = default(System.Text.Json.JsonDocumentOptions)) { throw null; }
         public static System.Text.Json.JsonDocument Parse(System.ReadOnlyMemory<char> json, System.Text.Json.JsonDocumentOptions options = default(System.Text.Json.JsonDocumentOptions)) { throw null; }
         public static System.Text.Json.JsonDocument Parse(string json, System.Text.Json.JsonDocumentOptions options = default(System.Text.Json.JsonDocumentOptions)) { throw null; }
-        public static System.Text.Json.JsonDocument Parse(System.Text.Json.JsonElement node) { throw null; }
-        public static System.Text.Json.JsonDocument Parse(System.Text.Json.JsonNode node) { throw null; }
         public static System.Threading.Tasks.Task<System.Text.Json.JsonDocument> ParseAsync(System.IO.Stream utf8Json, System.Text.Json.JsonDocumentOptions options = default(System.Text.Json.JsonDocumentOptions), System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { throw null; }
         public static System.Text.Json.JsonDocument ParseValue(ref System.Text.Json.Utf8JsonReader reader) { throw null; }
         public static bool TryParseValue(ref System.Text.Json.Utf8JsonReader reader, out System.Text.Json.JsonDocument document) { throw null; }
@@ -141,7 +139,6 @@ namespace System.Text.Json
         public System.Text.Json.JsonElement Clone() { throw null; }
         public static System.Text.Json.JsonNode DeepCopy(System.Text.Json.JsonDocument jsonDocument) { throw null; }
         public static System.Text.Json.JsonNode DeepCopy(System.Text.Json.JsonElement jsonElement) { throw null; }
-        public static System.Text.Json.JsonNode DeepCopy(System.Text.Json.JsonNode jsonNode) { throw null; }
         public System.Text.Json.JsonElement.ArrayEnumerator EnumerateArray() { throw null; }
         public System.Text.Json.JsonElement.ObjectEnumerator EnumerateObject() { throw null; }
         public int GetArrayLength() { throw null; }
@@ -260,7 +257,10 @@ namespace System.Text.Json
     {
         public JsonNode() { }
         public System.Text.Json.JsonElement AsJsonElement() { throw null; }
+        public static System.Text.Json.JsonNode DeepCopy(System.Text.Json.JsonNode jsonNode) { throw null; }
+        public static System.Text.Json.JsonNode GetNode(System.Text.Json.JsonElement jsonElement) { throw null; }
         public static System.Text.Json.JsonNode Parse(string json) { throw null; }
+        public static bool TryGetNode(System.Text.Json.JsonElement jsonElement, out System.Text.Json.JsonNode jsonNode) { throw null; }
     }
     public partial class JsonNumber : System.Text.Json.JsonNode
     {
