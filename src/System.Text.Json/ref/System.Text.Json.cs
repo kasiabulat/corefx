@@ -137,8 +137,6 @@ namespace System.Text.Json
         public System.Text.Json.JsonElement this[int index] { get { throw null; } }
         public System.Text.Json.JsonValueKind ValueKind { get { throw null; } }
         public System.Text.Json.JsonElement Clone() { throw null; }
-        public static System.Text.Json.JsonNode DeepCopy(System.Text.Json.JsonDocument jsonDocument) { throw null; }
-        public static System.Text.Json.JsonNode DeepCopy(System.Text.Json.JsonElement jsonElement) { throw null; }
         public System.Text.Json.JsonElement.ArrayEnumerator EnumerateArray() { throw null; }
         public System.Text.Json.JsonElement.ObjectEnumerator EnumerateObject() { throw null; }
         public int GetArrayLength() { throw null; }
@@ -253,12 +251,18 @@ namespace System.Text.Json
         public static System.Text.Json.JsonNamingPolicy CamelCase { get { throw null; } }
         public abstract string ConvertName(string name);
     }
-    public partial class JsonNode
+    public abstract partial class JsonNode
     {
-        public JsonNode() { }
+        internal JsonNode() { }
         public System.Text.Json.JsonElement AsJsonElement() { throw null; }
+        public static System.Text.Json.JsonNode DeepCopy(System.Text.Json.JsonDocument jsonDocument) { throw null; }
+        public static System.Text.Json.JsonNode DeepCopy(System.Text.Json.JsonElement jsonElement) { throw null; }
         public static System.Text.Json.JsonNode DeepCopy(System.Text.Json.JsonNode jsonNode) { throw null; }
         public static System.Text.Json.JsonNode GetNode(System.Text.Json.JsonElement jsonElement) { throw null; }
+        public static System.Text.Json.JsonNode Parse(System.Buffers.ReadOnlySequence<byte> utf8Json) { throw null; }
+        public static System.Text.Json.JsonNode Parse(System.IO.Stream utf8Json) { throw null; }
+        public static System.Text.Json.JsonNode Parse(System.ReadOnlyMemory<byte> utf8Json) { throw null; }
+        public static System.Text.Json.JsonNode Parse(System.ReadOnlyMemory<char> json) { throw null; }
         public static System.Text.Json.JsonNode Parse(string json) { throw null; }
         public static bool TryGetNode(System.Text.Json.JsonElement jsonElement, out System.Text.Json.JsonNode jsonNode) { throw null; }
     }

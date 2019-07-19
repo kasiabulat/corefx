@@ -386,9 +386,9 @@ namespace System.Text.Json
         public static void TestAddingJsonArray()
         {
             var preferences = new JsonObject()
-                {
-                    { "colours", new JsonArray { "red", "green", "purple" } }       
-                };
+            {
+                { "colours", new JsonArray{ "red", "green", "purple" } }       
+            };
 
             Assert.IsType<JsonArray>(preferences["colours"]);
             var colours = preferences["colours"] as JsonArray;
@@ -411,9 +411,9 @@ namespace System.Text.Json
         {
             string[] expected = { "sushi", "pasta", "cucumber soup" };
             var preferences = new JsonObject()
-                {
-                    { "dishes", new JsonArray(expected) }
-                };
+            {
+                { "dishes", new JsonArray(expected) }
+            };
 
             Assert.IsType<JsonArray>(preferences["dishes"]);
             var dishesJson = preferences["dishes"] as JsonArray;
@@ -433,9 +433,9 @@ namespace System.Text.Json
         public static void TestAddingJsonArrayFromJsonNumberArray()
         {
             var preferences = new JsonObject()
-                {
-                     { "prime numbers", new JsonNumber[] { 19, 37 } }
-                };
+            {
+                { "prime numbers", new JsonNumber[] { 19, 37 } }
+            };
 
             Assert.IsType<JsonArray>(preferences["prime numbers"]);
             var primeNumbers = preferences["prime numbers"] as JsonArray;
@@ -469,9 +469,9 @@ namespace System.Text.Json
             IEnumerable<string> sports = sportsExperienceYears.Where(sport => ((JsonNumber)sport.Value).GetInt32() > 2).Select(sport => sport.Key);
 
             var preferences = new JsonObject()
-                {
-                     { "sports", new JsonArray(sports) }
-                };
+            {
+                { "sports", new JsonArray(sports) }
+            };
 
             Assert.IsType<JsonArray>(preferences["sports"]);
             var sportsJsonArray = preferences["sports"] as JsonArray;
@@ -499,9 +499,9 @@ namespace System.Text.Json
             };
 
             var preferences = new JsonObject()
-                {
-                     { "strange words", strangeWords.Where(word => ((JsonString)word).Value.Length < 10) }
-                };
+            {
+                { "strange words", strangeWords.Where(word => ((JsonString)word).Value.Length < 10) }
+            };
 
             Assert.IsType<JsonArray>(preferences["strange words"]);
             var strangeWordsJsonArray = preferences["strange words"] as JsonArray;
@@ -991,7 +991,7 @@ namespace System.Text.Json
         public static void TestTransformingJsonElementToJsonNode()
         {
             // Retrieve Json from network, should not throw any exceptions:
-            JsonNode receivedEmployeeData = JsonElement.DeepCopy(Mailbox.RetrieveMutableEmployeeData());
+            JsonNode receivedEmployeeData = JsonNode.DeepCopy(Mailbox.RetrieveMutableEmployeeData());
             if (receivedEmployeeData is JsonObject employee)
             {
                 employee["name"] = new JsonString("Bob");
@@ -1027,8 +1027,7 @@ namespace System.Text.Json
                 Mailbox.SendAllEmployeesData(employeesToSend.RootElement);
 
                 // modified elements send:
-                JsonNode modifiableDocument = JsonElement.DeepCopy(employeesToSend);
-                var employees = modifiableDocument as JsonObject;
+                JsonObject employees = JsonNode.DeepCopy(employeesToSend) as JsonObject;
                 Assert.Equal(2, employees.Count());
 
                 employees.Add(EmployeesDatabase.GetNextEmployee());
@@ -1086,7 +1085,7 @@ namespace System.Text.Json
             JsonObject employee = EmployeesDatabase.GetManager();
             JsonNode employeeCopy = JsonNode.DeepCopy(employee);
 
-            static bool recursiveEquals(JsonNode left, JsonNode right)
+            static bool RecursiveEquals(JsonNode left, JsonNode right)
             {
                 if (left == null && right == null)
                 {
@@ -1112,7 +1111,7 @@ namespace System.Text.Json
                             KeyValuePair<string, JsonNode> leftElement = leftJsonObject.ElementAt(idx);
                             KeyValuePair<string, JsonNode> rightElement = rightJsonObject.ElementAt(idx);
 
-                            if(leftElement.Key != rightElement.Key || !recursiveEquals(leftElement.Value, rightElement.Value))
+                            if(leftElement.Key != rightElement.Key || !RecursiveEquals(leftElement.Value, rightElement.Value))
                             {
                                 return false;
                             }
@@ -1130,7 +1129,7 @@ namespace System.Text.Json
                             JsonNode leftElement = leftJsonArray.ElementAt(idx);
                             JsonNode rightElement = rightJsonArray.ElementAt(idx);
 
-                            if(!recursiveEquals(leftElement, rightElement))
+                            if(!RecursiveEquals(leftElement, rightElement))
                             {
                                 return false;
                             }
@@ -1148,7 +1147,7 @@ namespace System.Text.Json
                 }
             }
 
-            Assert.True(recursiveEquals(employee, employeeCopy));
+            Assert.True(RecursiveEquals(employee, employeeCopy));
         }
 
         /// <summary>
