@@ -131,7 +131,7 @@ namespace System.Text.Json
         public static void TestModifyingJsonObjectKeyRemoveAdd()
         {
             JsonObject manager = EmployeesDatabase.GetManager();
-            JsonObject reportingEmployees = manager.GetObjectProperty("reporting employees");
+            JsonObject reportingEmployees = manager.GetJsonObjectProperty("reporting employees");
 
             static void ModifyProperty(JsonObject jsonObject, string previousName, string newName)
             {
@@ -160,7 +160,7 @@ namespace System.Text.Json
         public static void TestModifyingJsonObjectKeyModifyMethod()
         {
             JsonObject manager = EmployeesDatabase.GetManager();
-            JsonObject reportingEmployees = manager.GetObjectProperty("reporting employees");
+            JsonObject reportingEmployees = manager.GetJsonObjectProperty("reporting employees");
 
             Assert.True(reportingEmployees.ContainsProperty("software developers"));
             JsonNode previousValue = reportingEmployees["software engineers"];

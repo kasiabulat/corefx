@@ -106,7 +106,7 @@ namespace System.Text.Json
             Assert.True(employees.ContainsProperty("employee1"));
             Assert.True(employees.ContainsProperty("employee2"));
 
-            JsonObject employee2 = employees.GetObjectProperty("employee2");
+            JsonObject employee2 = employees.GetJsonObjectProperty("employee2");
             Assert.IsType<JsonString>(employee2["name"]);
             Assert.Equal("Zoe", (JsonString)employee2["name"]);
             Assert.IsType<JsonString>(employee2["surname"]);

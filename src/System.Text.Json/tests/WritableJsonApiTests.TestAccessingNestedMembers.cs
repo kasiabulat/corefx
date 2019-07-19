@@ -86,9 +86,9 @@ namespace System.Text.Json
 
             // Should not throw any exceptions:
 
-            JsonObject internDevelopers = manager.GetObjectProperty("reporting employees")
-                                          .GetObjectProperty("software developers")
-                                          .GetObjectProperty("intern employees");
+            JsonObject internDevelopers = manager.GetJsonObjectProperty("reporting employees")
+                                          .GetJsonObjectProperty("software developers")
+                                          .GetJsonObjectProperty("intern employees");
             internDevelopers.Add(EmployeesDatabase.GetNextEmployee());
         }
 
@@ -134,9 +134,9 @@ namespace System.Text.Json
                 { "tests", new JsonArray{ "code coverage" } },
             };
 
-            issues.GetArrayProperty("bugs").Add("bug 12356");
-            ((JsonString)issues.GetArrayProperty("features")[0]).Value = "feature 1569";
-            ((JsonString)issues.GetArrayProperty("features")[1]).Value = "feature 56134";
+            issues.GetJsonArrayProperty("bugs").Add("bug 12356");
+            ((JsonString)issues.GetJsonArrayProperty("features")[0]).Value = "feature 1569";
+            ((JsonString)issues.GetJsonArrayProperty("features")[1]).Value = "feature 56134";
 
             Assert.True(((JsonArray)issues["bugs"]).Contains("bug 12356"));
             Assert.Equal((JsonString)((JsonArray)issues["features"])[0], "feature 1569");

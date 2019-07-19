@@ -87,8 +87,6 @@ namespace System.Text.Json
         public int LastIndexOf(System.Text.Json.JsonNode item) { throw null; }
         public bool Remove(System.Text.Json.JsonNode item) { throw null; }
         public void RemoveAt(int index) { }
-        public void Sort() { }
-        public void Sort(System.Collections.IComparer comparer) { }
         void System.Collections.Generic.ICollection<System.Text.Json.JsonNode>.CopyTo(System.Text.Json.JsonNode[] array, int arrayIndex) { }
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw null; }
     }
@@ -375,9 +373,9 @@ namespace System.Text.Json
         public void AddRange(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, System.Text.Json.JsonNode>> jsonProperties) { }
         public bool ContainsProperty(string propertyName) { throw null; }
         public System.Collections.Generic.IEnumerable<System.Text.Json.JsonNode> GetAllProperties(string propertyName) { throw null; }
-        public System.Text.Json.JsonArray GetArrayProperty(string propertyName) { throw null; }
         public System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string, System.Text.Json.JsonNode>> GetEnumerator() { throw null; }
-        public System.Text.Json.JsonObject GetObjectProperty(string propertyName) { throw null; }
+        public System.Text.Json.JsonArray GetJsonArrayProperty(string propertyName) { throw null; }
+        public System.Text.Json.JsonObject GetJsonObjectProperty(string propertyName) { throw null; }
         public System.Text.Json.JsonNode GetProperty(string propertyName) { throw null; }
         public bool ModifyPropertyName(string oldName, string newName) { throw null; }
         public bool Remove(string propertyName) { throw null; }

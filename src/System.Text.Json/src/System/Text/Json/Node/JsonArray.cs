@@ -96,16 +96,6 @@ namespace System.Text.Json
         public void Clear() { throw null; }
         public bool Remove(JsonNode item) { throw null; }
 
-        /// <summary>
-        /// First by types of nodes (JsonBoolean, JsonNumber, JsonString, JsonArray, JsonObject
-        /// then:
-        /// * JsonBooleans: first 0s, then 1s
-        /// * JsonNumbers ascendingly
-        /// * JsonStrings lexicographically
-        /// </summary>
-        public void Sort() { }
-        public void Sort(IComparer comparer) { }
-
         void ICollection<JsonNode>.CopyTo(JsonNode[] array, int arrayIndex) { throw null; }
         IEnumerator IEnumerable.GetEnumerator() { throw null; }
         public IEnumerator<JsonNode> GetEnumerator() { throw null; }
