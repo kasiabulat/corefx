@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -118,7 +119,8 @@ namespace System.Text.Json
         private static class Mailbox
         {
             public static void SendEmployeeData(JsonElement employeeData) { }
-            public static JsonElement RetrieveEmployeeData() { return EmployeesDatabase.GetNextEmployee().Value.AsJsonElement(); }
+            public static JsonElement RetrieveMutableEmployeeData() { return EmployeesDatabase.GetNextEmployee().Value.AsJsonElement(); }
+            public static JsonElement RetrieveImmutableEmployeeData() { return new JsonElement(); }
 
             public static void SendAllEmployeesData(JsonElement employeesData) { }
         }
@@ -759,8 +761,9 @@ namespace System.Text.Json
         [Fact]
         public static void TestAccesingNestedJsonObjectCastWithAs()
         {
-            // Casting with as operator
             JsonObject manager = EmployeesDatabase.GetManager();
+
+            // Should not throw any exceptions:
 
             var reportingEmployees = manager["reporting employees"] as JsonObject;
             if (reportingEmployees == null)
@@ -772,7 +775,7 @@ namespace System.Text.Json
 
             var internDevelopers = softwareDevelopers["intern employees"] as JsonObject;
             if (internDevelopers == null)
-                throw new InvalidCastException();
+                throw new InvalidCastException();    
 
             internDevelopers.Add(EmployeesDatabase.GetNextEmployee());
         }
@@ -785,16 +788,25 @@ namespace System.Text.Json
         {
             JsonObject manager = EmployeesDatabase.GetManager();
 
-            if (manager["reporting employees"] is JsonObject reportingEmployees)
+            static bool AddEmployee(JsonObject manager)
             {
-                if (reportingEmployees["software developers"] is JsonObject softwareDevelopers)
+
+                if (manager["reporting employees"] is JsonObject reportingEmployees)
                 {
-                    if (softwareDevelopers["full time employees"] is JsonObject fullTimeEmployees)
+                    if (reportingEmployees["software developers"] is JsonObject softwareDevelopers)
                     {
-                        fullTimeEmployees.Add(EmployeesDatabase.GetNextEmployee());
+                        if (softwareDevelopers["full time employees"] is JsonObject fullTimeEmployees)
+                        {
+                            fullTimeEmployees.Add(EmployeesDatabase.GetNextEmployee());
+                            return true;
+                        }
                     }
                 }
+                return false;
             }
+
+            bool success = AddEmployee(manager);
+            Assert.True(success);
         }
 
         /// <summary>
@@ -805,6 +817,7 @@ namespace System.Text.Json
         {
             JsonObject manager = EmployeesDatabase.GetManager();
 
+            // Should not throw any exceptions:
             ((JsonObject)((JsonObject)manager["reporting employees"])["HR"]).Add(EmployeesDatabase.GetNextEmployee());
         }
 
@@ -815,6 +828,9 @@ namespace System.Text.Json
         public static void TestAccesingNestedJsonObjectGetPropertyMethod()
         {
             JsonObject manager = EmployeesDatabase.GetManager();
+
+            // Should not throw any exceptions:
+
             JsonObject internDevelopers = manager.GetObjectProperty("reporting employees")
                                           .GetObjectProperty("software developers")
                                           .GetObjectProperty("intern employees");
@@ -828,16 +844,26 @@ namespace System.Text.Json
         public static void TestAccesingNestedJsonObjectTryGetPropertyMethod()
         {
             JsonObject manager = EmployeesDatabase.GetManager();
-            if (manager.TryGetObjectProperty("reporting employees", out JsonObject reportingEmployees))
+
+            static bool AddEmployee(JsonObject manager)
             {
-                if (reportingEmployees.TryGetObjectProperty("software developers", out JsonObject softwareDevelopers))
+                if (manager.TryGetObjectProperty("reporting employees", out JsonObject reportingEmployees))
                 {
-                    if (softwareDevelopers.TryGetObjectProperty("full time employees", out JsonObject fullTimeEmployees))
+                    if (reportingEmployees.TryGetObjectProperty("software developers", out JsonObject softwareDevelopers))
                     {
-                        fullTimeEmployees.Add(EmployeesDatabase.GetNextEmployee());
+                        if (softwareDevelopers.TryGetObjectProperty("full time employees", out JsonObject fullTimeEmployees))
+                        {
+                            fullTimeEmployees.Add(EmployeesDatabase.GetNextEmployee());
+                            return true;
+                        }
                     }
                 }
+
+                return false;
             }
+
+            bool success = AddEmployee(manager);
+            Assert.True(success);
         }
 
         /// <summary>
@@ -856,6 +882,10 @@ namespace System.Text.Json
             issues.GetArrayProperty("bugs").Add("bug 12356");
             ((JsonString)issues.GetArrayProperty("features")[0]).Value = "feature 1569";
             ((JsonString)issues.GetArrayProperty("features")[1]).Value = "feature 56134";
+
+            Assert.True(((JsonArray)issues["bugs"]).Contains("bug 12356"));
+            Assert.Equal((JsonString)((JsonArray)issues["features"])[0], "feature 1569");
+            Assert.Equal((JsonString)((JsonArray)issues["features"])[1], "feature 56134");
         }
 
         /// <summary>
@@ -867,9 +897,24 @@ namespace System.Text.Json
             JsonObject manager = EmployeesDatabase.GetManager();
             JsonObject reportingEmployees = manager.GetObjectProperty("reporting employees");
 
-            JsonNode softwareDevelopers = reportingEmployees["software developers"];
-            reportingEmployees.Remove("software developers");
-            reportingEmployees.Add("software engineers", softwareDevelopers);
+            static void ModifyProperty(JsonObject jsonObject, string previousName, string newName)
+            {
+                JsonNode previousValue = jsonObject[previousName];
+                jsonObject.Remove(previousName);
+                jsonObject.Add(newName, previousValue);
+            }
+
+            string previousName = "software developers";
+            string newName = "software engineers";
+
+            Assert.True(reportingEmployees.ContainsProperty(previousName));
+            JsonNode previousValue = reportingEmployees[previousName];
+
+            ModifyProperty(reportingEmployees, previousName, newName);
+
+            Assert.False(reportingEmployees.ContainsProperty(previousName));
+            Assert.True(reportingEmployees.ContainsProperty(newName));
+            Assert.Equal(previousValue, reportingEmployees[newName]);
         }
 
         /// <summary>
@@ -881,7 +926,14 @@ namespace System.Text.Json
             JsonObject manager = EmployeesDatabase.GetManager();
             JsonObject reportingEmployees = manager.GetObjectProperty("reporting employees");
 
+            Assert.True(reportingEmployees.ContainsProperty("software developers"));
+            JsonNode previousValue = reportingEmployees["software engineers"];
+
             reportingEmployees.ModifyPropertyName("software developers", "software engineers");
+
+            Assert.False(reportingEmployees.ContainsProperty("software developers"));
+            Assert.True(reportingEmployees.ContainsProperty("software engineers"));
+            Assert.Equal(previousValue, reportingEmployees["software engineers"]);
         }
 
         /// <summary>
@@ -892,6 +944,11 @@ namespace System.Text.Json
         {
             var employees = new JsonObject(EmployeesDatabase.GetTenBestEmployees());
             ICollection<JsonNode> employeesWithoutId = employees.Values;
+
+            foreach(JsonNode employee in employeesWithoutId)
+            {
+                Assert.IsType<JsonObject>(employee);
+            }
         }
 
         /// <summary>
@@ -909,6 +966,11 @@ namespace System.Text.Json
             };
 
             IEnumerable<JsonNode> fullTimeEmployees = employees.GetAllProperties("FTE");
+
+            Assert.Equal(3, fullTimeEmployees.Count());
+            Assert.True(fullTimeEmployees.Contains((JsonString)"John Smith"));
+            Assert.True(fullTimeEmployees.Contains((JsonString)"Ann Predictable"));
+            Assert.True(fullTimeEmployees.Contains((JsonString)"Byron Shadow"));
         }
 
         /// <summary>
@@ -917,8 +979,8 @@ namespace System.Text.Json
         [Fact]
         public static void TestTransformingJsonNodeToJsonElement()
         {
-            // Send Json through network
-            var employeeDataToSend = EmployeesDatabase.GetNextEmployee().Value;
+            // Send Json through network, should not throw any exceptions:
+            JsonNode employeeDataToSend = EmployeesDatabase.GetNextEmployee().Value;
             Mailbox.SendEmployeeData(employeeDataToSend.AsJsonElement());
         }
 
@@ -928,7 +990,8 @@ namespace System.Text.Json
         [Fact]
         public static void TestTransformingJsonElementToJsonNode()
         {
-            var receivedEmployeeData = JsonElement.DeepCopy(Mailbox.RetrieveEmployeeData());
+            // Retrieve Json from network, should not throw any exceptions:
+            JsonNode receivedEmployeeData = JsonElement.DeepCopy(Mailbox.RetrieveMutableEmployeeData());
             if (receivedEmployeeData is JsonObject employee)
             {
                 employee["name"] = new JsonString("Bob");
@@ -966,7 +1029,10 @@ namespace System.Text.Json
                 // modified elements send:
                 JsonNode modifiableDocument = JsonElement.DeepCopy(employeesToSend);
                 var employees = modifiableDocument as JsonObject;
+                Assert.Equal(2, employees.Count());
+
                 employees.Add(EmployeesDatabase.GetNextEmployee());
+                Assert.Equal(3, employees.Count());
 
                 Mailbox.SendAllEmployeesData(employees.AsJsonElement());
             }
@@ -997,6 +1063,18 @@ namespace System.Text.Json
             JsonObject employees = JsonNode.Parse(jsonString) as JsonObject;
             employees.Add(EmployeesDatabase.GetNextEmployee());
             Mailbox.SendAllEmployeesData(employees.AsJsonElement());
+
+            Assert.Equal(2, employees.Count());
+            Assert.True(employees.ContainsProperty("employee1"));
+            Assert.True(employees.ContainsProperty("employee2"));
+
+            JsonObject employee2 = employees.GetObjectProperty("employee2");
+            Assert.IsType<JsonString>(employee2["name"]);
+            Assert.Equal("Zoe", (JsonString)employee2["name"]);
+            Assert.IsType<JsonString>(employee2["surname"]);
+            Assert.Equal("Coder", (JsonString)employee2["surname"]);
+            Assert.IsType<JsonNumber>(employee2["age"]);
+            Assert.Equal(24, (JsonNumber)employee2["age"]);
         }
 
         /// <summary>
@@ -1007,6 +1085,70 @@ namespace System.Text.Json
         {
             JsonObject employee = EmployeesDatabase.GetManager();
             JsonNode employeeCopy = JsonNode.DeepCopy(employee);
+
+            static bool recursiveEquals(JsonNode left, JsonNode right)
+            {
+                if (left == null && right == null)
+                {
+                    return true;
+                }
+               
+                if(right.GetType() != left.GetType())
+                {
+                    return false;
+                }
+
+                switch(left)
+                {
+                    case JsonObject leftJsonObject:
+                        var rightJsonObject = right as JsonObject;
+                        if (leftJsonObject.Count() != rightJsonObject.Count())
+                        {
+                            return false;
+                        }
+
+                        for(int idx = 0; idx < leftJsonObject.Count(); idx++)
+                        {
+                            KeyValuePair<string, JsonNode> leftElement = leftJsonObject.ElementAt(idx);
+                            KeyValuePair<string, JsonNode> rightElement = rightJsonObject.ElementAt(idx);
+
+                            if(leftElement.Key != rightElement.Key || !recursiveEquals(leftElement.Value, rightElement.Value))
+                            {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    case JsonArray leftJsonArray:
+                        var rightJsonArray = right as JsonArray;
+                        if (leftJsonArray.Count() != rightJsonArray.Count())
+                        {
+                            return false;
+                        }
+                        for (int idx = 0; idx < leftJsonArray.Count(); idx++)
+                        {
+                            JsonNode leftElement = leftJsonArray.ElementAt(idx);
+                            JsonNode rightElement = rightJsonArray.ElementAt(idx);
+
+                            if(!recursiveEquals(leftElement, rightElement))
+                            {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    case JsonString leftJsonString:
+                        return leftJsonString.Equals(right as JsonString);
+                    case JsonNumber leftJsonNumber:
+                        return leftJsonNumber.Equals(right as JsonNumber);
+                    case JsonBoolean leftJsonBoolean:
+                        return leftJsonBoolean.Equals(right as JsonBoolean);
+                    default:
+                        return false;
+                }
+            }
+
+            Assert.True(recursiveEquals(employee, employeeCopy));
         }
 
         /// <summary>
@@ -1015,12 +1157,17 @@ namespace System.Text.Json
         [Fact]
         public static void TestIsImmutable()
         {
-            JsonElement employee = Mailbox.RetrieveEmployeeData();
-            if(employee.IsImmutable)
+            JsonElement employee = Mailbox.RetrieveMutableEmployeeData();
+            Assert.False(employee.IsImmutable);
+
+            if (!employee.IsImmutable)
             {
                 JsonObject employeeNode = JsonNode.GetNode(employee) as JsonObject;
                 employeeNode["received as node"] = (JsonBoolean) true;
             }
+
+            employee = Mailbox.RetrieveImmutableEmployeeData();
+            Assert.True(employee.IsImmutable);
         }
 
         /// <summary>
@@ -1029,11 +1176,19 @@ namespace System.Text.Json
         [Fact]
         public static void TestTryGetNode()
         {
-            JsonElement employee = Mailbox.RetrieveEmployeeData();
-            if (JsonNode.TryGetNode(employee, out JsonNode employeeNode))
+            JsonElement employee = Mailbox.RetrieveMutableEmployeeData();
+
+            static bool CheckIfReceivedAsNode(JsonElement employee)
             {
-                ((JsonObject)employeeNode)["received as node"] = (JsonBoolean) true;
+                if (JsonNode.TryGetNode(employee, out JsonNode employeeNode))
+                {
+                    ((JsonObject)employeeNode)["received as node"] = (JsonBoolean)true;
+                    return true;
+                }
+                return false;
             }
+
+            Assert.True(CheckIfReceivedAsNode(employee));
         }
 
         /// <summary>
@@ -1051,7 +1206,7 @@ namespace System.Text.Json
             };
 
             employees.Sort();
-            
+
             // Create medical appointments for employees in alphabetical order
             foreach (JsonNode employee in employees)
             {
@@ -1059,6 +1214,14 @@ namespace System.Text.Json
                 {
                     HealthCare.CreateMedicalAppointment(person.Value);
                 }
+            }
+
+            string[] expected = { "Coder Zoe", "Predictable Ann", "Shadow Byron", "Smith John" };
+            Assert.Equal(expected.Count(), employees.Count());
+
+            for(int idx=0; idx < expected.Count(); idx++)
+            {
+                Assert.Equal(expected[idx], (JsonString)employees[idx]);
             }
         }
 
@@ -1082,7 +1245,7 @@ namespace System.Text.Json
 
             studentGrades.Sort();
 
-            double ComputeMedian(JsonArray grades)
+            static double ComputeMedian(JsonArray grades)
             {
                 if ((grades?.Count ?? 0) == 0)
                 {
