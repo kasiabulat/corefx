@@ -7,7 +7,7 @@
 
 namespace System.Text.Json
 {
-    public partial class JsonNumber : JsonNode
+    public partial class JsonNumber : JsonNode, IEquatable<JsonNumber>
     {
         public JsonNumber() { }
         public JsonNumber(string value) { }
@@ -90,6 +90,11 @@ namespace System.Text.Json
 
         public override bool Equals(object obj) { throw null; }
         public override int GetHashCode() { throw null; }
+
+        public bool Equals(JsonNumber other) { throw null; }
+
+        public static bool operator ==(JsonNumber left, JsonNumber right) => throw null;
+        public static bool operator !=(JsonNumber left, JsonNumber right) => throw null;
     }
 }
 
