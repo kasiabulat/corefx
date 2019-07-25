@@ -9,7 +9,7 @@ namespace System.Text.Json
 {
 #pragma warning disable xUnit1000
     internal static partial class WritableJsonApiTests
-#pragma warning enable xUnit1000
+#pragma warning restore xUnit1000
     {
         /// <summary>
         /// Replacing Json object's primnary types
