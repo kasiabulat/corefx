@@ -90,14 +90,17 @@ namespace System.Text.Json
         void System.Collections.Generic.ICollection<System.Text.Json.JsonNode>.CopyTo(System.Text.Json.JsonNode[] array, int arrayIndex) { }
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw null; }
     }
-    public partial class JsonBoolean : System.Text.Json.JsonNode
+    public partial class JsonBoolean : System.Text.Json.JsonNode, System.IEquatable<System.Text.Json.JsonBoolean>
     {
         public JsonBoolean() { }
         public JsonBoolean(bool value) { }
         public bool Value { get { throw null; } set { } }
         public override bool Equals(object obj) { throw null; }
+        public bool Equals(System.Text.Json.JsonBoolean other) { throw null; }
         public override int GetHashCode() { throw null; }
+        public static bool operator ==(System.Text.Json.JsonBoolean left, System.Text.Json.JsonBoolean right) { throw null; }
         public static implicit operator System.Text.Json.JsonBoolean (bool value) { throw null; }
+        public static bool operator !=(System.Text.Json.JsonBoolean left, System.Text.Json.JsonBoolean right) { throw null; }
     }
     public enum JsonCommentHandling : byte
     {
@@ -264,7 +267,7 @@ namespace System.Text.Json
         public static System.Text.Json.JsonNode Parse(string json) { throw null; }
         public static bool TryGetNode(System.Text.Json.JsonElement jsonElement, out System.Text.Json.JsonNode jsonNode) { throw null; }
     }
-    public partial class JsonNumber : System.Text.Json.JsonNode
+    public partial class JsonNumber : System.Text.Json.JsonNode, System.IEquatable<System.Text.Json.JsonNumber>
     {
         public JsonNumber() { }
         public JsonNumber(byte value) { }
@@ -283,6 +286,7 @@ namespace System.Text.Json
         [System.CLSCompliantAttribute(false)]
         public JsonNumber(ulong value) { }
         public override bool Equals(object obj) { throw null; }
+        public bool Equals(System.Text.Json.JsonNumber other) { throw null; }
         public byte GetByte() { throw null; }
         public double GetDouble() { throw null; }
         public override int GetHashCode() { throw null; }
@@ -299,6 +303,7 @@ namespace System.Text.Json
         public uint GetUInt32() { throw null; }
         [System.CLSCompliantAttribute(false)]
         public ulong GetUInt64() { throw null; }
+        public static bool operator ==(System.Text.Json.JsonNumber left, System.Text.Json.JsonNumber right) { throw null; }
         public static implicit operator System.Text.Json.JsonNumber (byte value) { throw null; }
         public static implicit operator System.Text.Json.JsonNumber (double value) { throw null; }
         public static implicit operator System.Text.Json.JsonNumber (short value) { throw null; }
@@ -313,6 +318,7 @@ namespace System.Text.Json
         public static implicit operator System.Text.Json.JsonNumber (uint value) { throw null; }
         [System.CLSCompliantAttribute(false)]
         public static implicit operator System.Text.Json.JsonNumber (ulong value) { throw null; }
+        public static bool operator !=(System.Text.Json.JsonNumber left, System.Text.Json.JsonNumber right) { throw null; }
         public void SetByte(byte value) { }
         public void SetDouble(double value) { }
         public void SetInt16(short value) { }
@@ -444,14 +450,17 @@ namespace System.Text.Json
         public bool WriteIndented { get { throw null; } set { } }
         public System.Text.Json.Serialization.JsonConverter GetConverter(System.Type typeToConvert) { throw null; }
     }
-    public partial class JsonString : System.Text.Json.JsonNode
+    public partial class JsonString : System.Text.Json.JsonNode, System.IEquatable<System.Text.Json.JsonString>
     {
         public JsonString() { }
         public JsonString(string value) { }
         public string Value { get { throw null; } set { } }
         public override bool Equals(object obj) { throw null; }
+        public bool Equals(System.Text.Json.JsonString other) { throw null; }
         public override int GetHashCode() { throw null; }
+        public static bool operator ==(System.Text.Json.JsonString left, System.Text.Json.JsonString right) { throw null; }
         public static implicit operator System.Text.Json.JsonString (string value) { throw null; }
+        public static bool operator !=(System.Text.Json.JsonString left, System.Text.Json.JsonString right) { throw null; }
     }
     public enum JsonTokenType : byte
     {
