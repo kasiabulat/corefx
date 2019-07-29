@@ -178,5 +178,41 @@ namespace System.Text.Json
             Assert.True(success);
             Assert.Equal(value, result);
         }
+
+        [Theory]
+        [InlineData("3.14")]
+        [InlineData("-17")]
+        [InlineData("0")]
+        [InlineData("189")]
+        [InlineData("1e400")]
+        [InlineData("1e+100000002")]
+        [InlineData("184467440737095516150.184467440737095516150")]
+        public static void TestString(string value)
+        {
+            var jsonNumber = new JsonNumber();
+            jsonNumber.SetString(value);
+            string result = jsonNumber.GetString();
+            Assert.Equal(value, result);
+        }
+
+        [Theory]
+        [InlineData("3,14")]
+        [InlineData("this is not a number")]
+        [InlineData("NAN")]
+        [InlineData("0.")]
+        [InlineData("008")]
+        [InlineData("5e")]
+        public static void TestInvalidString(string value)
+        {
+            Assert.Throws<ArgumentException>(() => new JsonNumber(value));
+        }
+
+        [Fact]
+        public static void TestIntFromString()
+        {
+            var jsonNumber = new JsonNumber("145");
+            int result = jsonNumber.GetInt32();
+            Assert.Equal(145, result);
+        }
     }
 }

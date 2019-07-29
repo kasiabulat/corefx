@@ -117,7 +117,7 @@ namespace System.Text.Json
                 value = GetByte();
                 return true;
             } 
-           catch(Exception)
+           catch
             {
                 value = 0;
                 return false;
@@ -130,7 +130,7 @@ namespace System.Text.Json
                 value = GetInt16();
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 value = 0;
                 return false;
@@ -143,7 +143,7 @@ namespace System.Text.Json
                 value = GetInt32();
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 value = 0;
                 return false;
@@ -156,7 +156,7 @@ namespace System.Text.Json
                 value = GetInt64();
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 value = 0;
                 return false;
@@ -169,7 +169,7 @@ namespace System.Text.Json
                 value = GetSingle();
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 value = 0;
                 return false;
@@ -182,7 +182,7 @@ namespace System.Text.Json
                 value = GetDouble();
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 value = 0;
                 return false;
@@ -196,7 +196,7 @@ namespace System.Text.Json
                 value = GetSByte();
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 value = 0;
                 return false;
@@ -210,7 +210,7 @@ namespace System.Text.Json
                 value = GetUInt16();
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 value = 0;
                 return false;
@@ -224,7 +224,7 @@ namespace System.Text.Json
                 value = GetUInt32();
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 value = 0;
                 return false;
@@ -238,7 +238,7 @@ namespace System.Text.Json
                 value = GetUInt64();
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 value = 0;
                 return false;
@@ -247,8 +247,10 @@ namespace System.Text.Json
 
         public void SetString(string value)
         {
+            JsonWriterHelper.ValidateNumber(Encoding.UTF8.GetBytes(value).AsSpan());
             _value = value;
         }
+
         public void SetByte(byte value)
         {
             _value = value.ToString();
