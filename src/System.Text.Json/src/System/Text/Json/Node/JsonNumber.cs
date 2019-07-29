@@ -17,64 +17,52 @@ namespace System.Text.Json
         public JsonNumber() { }
         public JsonNumber(string value)
         {
-            _bytes = Encoding.UTF8.GetBytes(value);
+            SetString(value);
         }
         public JsonNumber(byte value)
         {
-            _bytes = new byte[1];
-            _bytes[0] = value;
-            AdjustBitOrder();
+            SetByte(value);
         }
         public JsonNumber(short value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            SetInt16(value);
         }
         public JsonNumber(int value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            SetInt32(value);
         }
 
         public JsonNumber(long value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            SetInt64(value);
         }
         public JsonNumber(float value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            SetSingle(value);
         }
         public JsonNumber(double value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            SetDouble(value);
         }
         [CLSCompliant(false)]
         public JsonNumber(sbyte value)
         {
-            _bytes = new byte[1];
-            _bytes[0] = (byte) value;
-            AdjustBitOrder();
+            SetSByte(value);
         }
         [CLSCompliant(false)]
         public JsonNumber(ushort value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            SetUInt16(value);
         }
         [CLSCompliant(false)]
         public JsonNumber(uint value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            SetUInt32(value);
         }
         [CLSCompliant(false)]
         public JsonNumber(ulong value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            SetUInt64(value);
         }
 
         private void AdjustBitOrder()
@@ -114,21 +102,66 @@ namespace System.Text.Json
         [CLSCompliant(false)]
         public bool TryGetUInt64(out ulong value) { throw null; }
 
-        public void SetString(string value) { }
-        public void SetByte(byte value) { }
-        public void SetInt32(int value) { }
-        public void SetInt16(short value) { }
-        public void SetInt64(long value) { }
-        public void SetSingle(float value) { }
-        public void SetDouble(double value) { }
+        public void SetString(string value)
+        {
+            _bytes = Encoding.UTF8.GetBytes(value);
+        }
+        public void SetByte(byte value)
+        {
+            _bytes = new byte[1];
+            _bytes[0] = value;
+            AdjustBitOrder();
+        }
+        public void SetInt32(int value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
+        public void SetInt16(short value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
+        public void SetInt64(long value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
+        public void SetSingle(float value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
+        public void SetDouble(double value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
         [CLSCompliant(false)]
-        public void SetSByte(sbyte value) { }
+        public void SetSByte(sbyte value)
+        {
+            _bytes = new byte[1];
+            _bytes[0] = (byte)value;
+            AdjustBitOrder();
+        }
         [CLSCompliant(false)]
-        public void SetUInt16(ushort value) { }
+        public void SetUInt16(ushort value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
         [CLSCompliant(false)]
-        public void SetUInt32(uint value) { }
+        public void SetUInt32(uint value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
         [CLSCompliant(false)]
-        public void SetUInt64(ulong value) { }
+        public void SetUInt64(ulong value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
 
         public static implicit operator JsonNumber(byte value) { throw null; }
         public static implicit operator JsonNumber(int value) { throw null; }
