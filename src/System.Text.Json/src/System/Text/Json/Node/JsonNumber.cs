@@ -9,22 +9,79 @@ namespace System.Text.Json
 {
     public partial class JsonNumber : JsonNode, IEquatable<JsonNumber>
     {
+        // number representation stored:
+        // * in big-endian if created from number
+        // * in Utf8 if created from string
+        private byte[] _bytes;
+
         public JsonNumber() { }
-        public JsonNumber(string value) { }
-        public JsonNumber(byte value) { }
-        public JsonNumber(short value) { }
-        public JsonNumber(int value) { }
-        public JsonNumber(long value) { }
-        public JsonNumber(float value) { }
-        public JsonNumber(double value) { }
+        public JsonNumber(string value)
+        {
+            _bytes = Encoding.UTF8.GetBytes(value);
+        }
+        public JsonNumber(byte value)
+        {
+            _bytes = new byte[1];
+            _bytes[0] = value;
+            AdjustBitOrder();
+        }
+        public JsonNumber(short value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
+        public JsonNumber(int value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
+
+        public JsonNumber(long value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
+        public JsonNumber(float value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
+        public JsonNumber(double value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
         [CLSCompliant(false)]
-        public JsonNumber(sbyte value) { }
+        public JsonNumber(sbyte value)
+        {
+            _bytes = new byte[1];
+            _bytes[0] = (byte) value;
+            AdjustBitOrder();
+        }
         [CLSCompliant(false)]
-        public JsonNumber(ushort value) { }
+        public JsonNumber(ushort value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
         [CLSCompliant(false)]
-        public JsonNumber(uint value) { }
+        public JsonNumber(uint value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
         [CLSCompliant(false)]
-        public JsonNumber(ulong value) { }
+        public JsonNumber(ulong value)
+        {
+            _bytes = BitConverter.GetBytes(value);
+            AdjustBitOrder();
+        }
+
+        private void AdjustBitOrder()
+        {
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(_bytes);
+        }
 
         public string GetString() { throw null; }
         public byte GetByte() { throw null; }
