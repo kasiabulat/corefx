@@ -139,8 +139,8 @@ namespace System.Text.Json
             ((JsonString)issues.GetJsonArrayProperty("features")[1]).Value = "feature 56134";
 
             Assert.True(((JsonArray)issues["bugs"]).Contains("bug 12356"));
-            Assert.Equal((JsonString)((JsonArray)issues["features"])[0], "feature 1569");
-            Assert.Equal((JsonString)((JsonArray)issues["features"])[1], "feature 56134");
+            Assert.Equal("feature 1569", (JsonString)((JsonArray)issues["features"])[0]);
+            Assert.Equal("feature 56134", (JsonString)((JsonArray)issues["features"])[1]);
         }
     }
 }

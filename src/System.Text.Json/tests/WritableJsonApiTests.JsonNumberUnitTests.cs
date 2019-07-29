@@ -19,7 +19,7 @@ namespace System.Text.Json
         [InlineData(-17.009)]
         [InlineData(3.14f)]
         [InlineData(0x2A)]
-        [InlineData(0b_0010_1010)]
+        [InlineData(0b_0110_1010)]
         [InlineData("1e400")]
         [InlineData("1e+100000002")]
         [InlineData("184467440737095516150.184467440737095516150")]
@@ -40,7 +40,7 @@ namespace System.Text.Json
             Assert.Equal(value, result);
             
             bool success = jsonNumber.TryGetByte(out result);
-            Assert.Equal(true, success);
+            Assert.True(success);
             Assert.Equal(value, result);
         }
 
@@ -55,7 +55,7 @@ namespace System.Text.Json
             Assert.Equal(value, result);
 
             bool success = jsonNumber.TryGetInt16(out result);
-            Assert.Equal(true, success);
+            Assert.True(success);
             Assert.Equal(value, result);
         }
 
@@ -70,7 +70,7 @@ namespace System.Text.Json
             Assert.Equal(value, result);
 
             bool success = jsonNumber.TryGetInt32(out result);
-            Assert.Equal(true, success);
+            Assert.True(success);
             Assert.Equal(value, result);
         }
 
@@ -85,7 +85,7 @@ namespace System.Text.Json
             Assert.Equal(value, result);
 
             bool success = jsonNumber.TryGetInt64(out result);
-            Assert.Equal(true, success);
+            Assert.True(success);
             Assert.Equal(value, result);
         }
 
@@ -100,7 +100,7 @@ namespace System.Text.Json
             Assert.Equal(value, result);
 
             bool success = jsonNumber.TryGetSingle(out result);
-            Assert.Equal(true, success);
+            Assert.True(success);
             Assert.Equal(value, result);
         }
 
@@ -115,7 +115,7 @@ namespace System.Text.Json
             Assert.Equal(value, result);
 
             bool success = jsonNumber.TryGetDouble(out result);
-            Assert.Equal(true, success);
+            Assert.True(success);
             Assert.Equal(value, result);
         }
 
@@ -130,7 +130,7 @@ namespace System.Text.Json
             Assert.Equal(value, result);
 
             bool success = jsonNumber.TryGetSByte(out result);
-            Assert.Equal(true, success);
+            Assert.True(success);
             Assert.Equal(value, result);
         }
 
@@ -145,7 +145,7 @@ namespace System.Text.Json
             Assert.Equal(value, result);
 
             bool success = jsonNumber.TryGetUInt16(out result);
-            Assert.Equal(true, success);
+            Assert.True(success);
             Assert.Equal(value, result);
         }
 
@@ -160,7 +160,7 @@ namespace System.Text.Json
             Assert.Equal(value, result);
 
             bool success = jsonNumber.TryGetUInt32(out result);
-            Assert.Equal(true, success);
+            Assert.True(success);
             Assert.Equal(value, result);
         }
 
@@ -175,7 +175,7 @@ namespace System.Text.Json
             Assert.Equal(value, result);
 
             bool success = jsonNumber.TryGetUInt64(out result);
-            Assert.Equal(true, success);
+            Assert.True(success);
             Assert.Equal(value, result);
         }
     }
