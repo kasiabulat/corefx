@@ -9,10 +9,7 @@ namespace System.Text.Json
 {
     public partial class JsonNumber : JsonNode, IEquatable<JsonNumber>
     {
-        // number representation stored:
-        // * in big-endian if created from number
-        // * in Utf8 if created from string
-        private byte[] _bytes;
+        private string _value;
 
         public JsonNumber() { }
         public JsonNumber(string value)
@@ -31,7 +28,6 @@ namespace System.Text.Json
         {
             SetInt32(value);
         }
-
         public JsonNumber(long value)
         {
             SetInt64(value);
@@ -65,102 +61,237 @@ namespace System.Text.Json
             SetUInt64(value);
         }
 
-        private void AdjustBitOrder()
+        public string GetString()
+        { 
+            return _value; 
+        }
+        public byte GetByte()
         {
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(_bytes);
+            return byte.Parse(_value);
+        }
+        public short GetInt16()
+        {
+            return short.Parse(_value);
+        }
+        public int GetInt32()
+        {
+            return int.Parse(_value);
+        }
+        public long GetInt64()
+        {
+            return long.Parse(_value);
+        }
+        public float GetSingle()
+        {
+            return float.Parse(_value);
+        }
+        public double GetDouble()
+        {
+            return double.Parse(_value);
+        }
+        [CLSCompliant(false)]
+        public sbyte GetSByte()
+        {
+            return sbyte.Parse(_value);
+        }
+        [CLSCompliant(false)]
+        public ushort GetUInt16()
+        {
+            return ushort.Parse(_value);
+        }
+        [CLSCompliant(false)]
+        public uint GetUInt32()
+        {
+            return uint.Parse(_value);
+        }
+        [CLSCompliant(false)]
+        public ulong GetUInt64()
+        {
+            return ulong.Parse(_value);
         }
 
-        public string GetString() { throw null; }
-        public byte GetByte() { throw null; }
-        public int GetInt32() { throw null; }
-        public short GetInt16() { throw null; }
-        public long GetInt64() { throw null; }
-        public float GetSingle() { throw null; }
-        public double GetDouble() { throw null; }
+        public bool TryGetByte(out byte value)
+        {
+            try
+            {
+                value = GetByte();
+                return true;
+            } 
+           catch(Exception)
+            {
+                value = 0;
+                return false;
+            }
+        }
+        public bool TryGetInt16(out short value)
+        {
+            try
+            {
+                value = GetInt16();
+                return true;
+            }
+            catch (Exception)
+            {
+                value = 0;
+                return false;
+            }
+        }
+        public bool TryGetInt32(out int value)
+        {
+            try
+            {
+                value = GetInt32();
+                return true;
+            }
+            catch (Exception)
+            {
+                value = 0;
+                return false;
+            }
+        }
+        public bool TryGetInt64(out long value)
+        {
+            try
+            {
+                value = GetInt64();
+                return true;
+            }
+            catch (Exception)
+            {
+                value = 0;
+                return false;
+            }
+        }
+        public bool TryGetSingle(out float value)
+        {
+            try
+            {
+                value = GetSingle();
+                return true;
+            }
+            catch (Exception)
+            {
+                value = 0;
+                return false;
+            }
+        }
+        public bool TryGetDouble(out double value)
+        {
+            try
+            {
+                value = GetDouble();
+                return true;
+            }
+            catch (Exception)
+            {
+                value = 0;
+                return false;
+            }
+        }
         [CLSCompliant(false)]
-        public sbyte GetSByte() { throw null; }
+        public bool TryGetSByte(out sbyte value)
+        {
+            try
+            {
+                value = GetSByte();
+                return true;
+            }
+            catch (Exception)
+            {
+                value = 0;
+                return false;
+            }
+        }
         [CLSCompliant(false)]
-        public ushort GetUInt16() { throw null; }
+        public bool TryGetUInt16(out ushort value)
+        {
+            try
+            {
+                value = GetUInt16();
+                return true;
+            }
+            catch (Exception)
+            {
+                value = 0;
+                return false;
+            }
+        }
         [CLSCompliant(false)]
-        public uint GetUInt32() { throw null; }
+        public bool TryGetUInt32(out uint value)
+        {
+            try
+            {
+                value = GetUInt32();
+                return true;
+            }
+            catch (Exception)
+            {
+                value = 0;
+                return false;
+            }
+        }
         [CLSCompliant(false)]
-        public ulong GetUInt64() { throw null; }
-
-        public bool TryGetByte(out byte value) { throw null; }
-        public bool TryGetInt32(out int value) { throw null; }
-        public bool TryGetInt16(out short value) { throw null; }
-        public bool TryGetInt64(out long value) { throw null; }
-        public bool TryGetSingle(out float value) { throw null; }
-        public bool TryGetDouble(out double value) { throw null; }
-        [CLSCompliant(false)]
-        public bool TryGetSByte(out sbyte value) { throw null; }
-        [CLSCompliant(false)]
-        public bool TryGetUInt16(out ushort value) { throw null; }
-        [CLSCompliant(false)]
-        public bool TryGetUInt32(out uint value) { throw null; }
-        [CLSCompliant(false)]
-        public bool TryGetUInt64(out ulong value) { throw null; }
+        public bool TryGetUInt64(out ulong value)
+        {
+            try
+            {
+                value = GetUInt64();
+                return true;
+            }
+            catch (Exception)
+            {
+                value = 0;
+                return false;
+            }
+        }
 
         public void SetString(string value)
         {
-            _bytes = Encoding.UTF8.GetBytes(value);
+            _value = value;
         }
         public void SetByte(byte value)
         {
-            _bytes = new byte[1];
-            _bytes[0] = value;
-            AdjustBitOrder();
-        }
-        public void SetInt32(int value)
-        {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            _value = value.ToString();
         }
         public void SetInt16(short value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            _value = value.ToString();
+        }
+        public void SetInt32(int value)
+        {
+            _value = value.ToString();
         }
         public void SetInt64(long value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            _value = value.ToString();
         }
         public void SetSingle(float value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            _value = value.ToString();
         }
         public void SetDouble(double value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            _value = value.ToString();
         }
         [CLSCompliant(false)]
         public void SetSByte(sbyte value)
         {
-            _bytes = new byte[1];
-            _bytes[0] = (byte)value;
-            AdjustBitOrder();
+            _value = value.ToString();
         }
         [CLSCompliant(false)]
         public void SetUInt16(ushort value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            _value = value.ToString();
         }
         [CLSCompliant(false)]
         public void SetUInt32(uint value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            _value = value.ToString();
         }
         [CLSCompliant(false)]
         public void SetUInt64(ulong value)
         {
-            _bytes = BitConverter.GetBytes(value);
-            AdjustBitOrder();
+            _value = value.ToString();
         }
 
         public static implicit operator JsonNumber(byte value)
