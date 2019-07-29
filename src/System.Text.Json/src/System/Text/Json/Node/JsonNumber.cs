@@ -339,13 +339,23 @@ namespace System.Text.Json
             return new JsonNumber(value);
         }
 
-        public override bool Equals(object obj) { throw null; }
-        public override int GetHashCode() { throw null; }
+        public override bool Equals(object obj)
+        {
+            return obj is JsonNumber number &&
+                   _value == number._value;
+        }
 
-        public bool Equals(JsonNumber other) { throw null; }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_value);
+        }
+        public bool Equals(JsonNumber other)
+        {
+            return _value == other._value;
+        }
 
-        public static bool operator ==(JsonNumber left, JsonNumber right) => throw null;
-        public static bool operator !=(JsonNumber left, JsonNumber right) => throw null;
+        public static bool operator ==(JsonNumber left, JsonNumber right) => left._value == right._value;
+        public static bool operator !=(JsonNumber left, JsonNumber right) => left._value != right._value;
     }
 }
 
