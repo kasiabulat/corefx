@@ -163,20 +163,50 @@ namespace System.Text.Json
             AdjustBitOrder();
         }
 
-        public static implicit operator JsonNumber(byte value) { throw null; }
-        public static implicit operator JsonNumber(int value) { throw null; }
-        public static implicit operator JsonNumber(short value) { throw null; }
-        public static implicit operator JsonNumber(long value) { throw null; }
-        public static implicit operator JsonNumber(float value) { throw null; }
-        public static implicit operator JsonNumber(double value) { throw null; }
+        public static implicit operator JsonNumber(byte value)
+        {
+            return new JsonNumber(value);
+        }
+        public static implicit operator JsonNumber(int value)
+        {
+            return new JsonNumber(value);
+        }
+        public static implicit operator JsonNumber(short value)
+        {
+            return new JsonNumber(value);
+        }
+        public static implicit operator JsonNumber(long value)
+        {
+            return new JsonNumber(value);
+        }
+        public static implicit operator JsonNumber(float value)
+        {
+            return new JsonNumber(value);
+        }
+        public static implicit operator JsonNumber(double value)
+        {
+            return new JsonNumber(value);
+        }
         [CLSCompliant(false)]
-        public static implicit operator JsonNumber(sbyte value) { throw null; }
+        public static implicit operator JsonNumber(sbyte value)
+        {
+            return new JsonNumber(value);
+        }
         [CLSCompliant(false)]
-        public static implicit operator JsonNumber(ushort value) { throw null; }
+        public static implicit operator JsonNumber(ushort value)
+        {
+            return new JsonNumber(value);
+        }
         [CLSCompliant(false)]
-        public static implicit operator JsonNumber(uint value) { throw null; }
+        public static implicit operator JsonNumber(uint value)
+        {
+            return new JsonNumber(value);
+        }
         [CLSCompliant(false)]
-        public static implicit operator JsonNumber(ulong value) { throw null; }
+        public static implicit operator JsonNumber(ulong value)
+        {
+            return new JsonNumber(value);
+        }
 
         public override bool Equals(object obj) { throw null; }
         public override int GetHashCode() { throw null; }
