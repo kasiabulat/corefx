@@ -8,9 +8,7 @@ using Xunit;
 
 namespace System.Text.Json
 {
-//#pragma warning disable xUnit1000
     public static partial class WritableJsonApiTests
-//#pragma warning restore xUnit1000
     {
         /// <summary>
         /// Transforming JsoneNode to JsonElement
