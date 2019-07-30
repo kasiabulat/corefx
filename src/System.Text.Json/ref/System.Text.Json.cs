@@ -12,6 +12,7 @@ namespace System.Text.Json
         public JsonArray() { }
         public JsonArray(System.Collections.Generic.IEnumerable<bool> values) { }
         public JsonArray(System.Collections.Generic.IEnumerable<byte> values) { }
+        public JsonArray(System.Collections.Generic.IEnumerable<decimal> values) { }
         public JsonArray(System.Collections.Generic.IEnumerable<double> values) { }
         public JsonArray(System.Collections.Generic.IEnumerable<short> values) { }
         public JsonArray(System.Collections.Generic.IEnumerable<int> values) { }
@@ -32,6 +33,7 @@ namespace System.Text.Json
         public System.Text.Json.JsonNode this[int idx] { get { throw null; } set { } }
         public void Add(bool value) { }
         public void Add(byte value) { }
+        public void Add(decimal value) { }
         public void Add(double value) { }
         public void Add(short value) { }
         public void Add(int value) { }
@@ -50,6 +52,7 @@ namespace System.Text.Json
         public void Clear() { }
         public bool Contains(bool value) { throw null; }
         public bool Contains(byte value) { throw null; }
+        public bool Contains(decimal value) { throw null; }
         public bool Contains(double value) { throw null; }
         public bool Contains(short value) { throw null; }
         public bool Contains(int value) { throw null; }
@@ -69,6 +72,7 @@ namespace System.Text.Json
         public int IndexOf(System.Text.Json.JsonNode item) { throw null; }
         public void Insert(int index, bool item) { }
         public void Insert(int index, byte item) { }
+        public void Insert(int index, decimal item) { }
         public void Insert(int index, double item) { }
         public void Insert(int index, short item) { }
         public void Insert(int index, int item) { }
@@ -365,6 +369,7 @@ namespace System.Text.Json
         public void Add(string propertyName, bool propertyValue) { }
         public void Add(string propertyName, byte propertyValue) { }
         public void Add(string propertyName, System.Collections.Generic.IEnumerable<System.Text.Json.JsonNode> propertyValue) { }
+        public void Add(string propertyName, decimal propertyValue) { }
         public void Add(string propertyName, double propertyValue) { }
         public void Add(string propertyName, short propertyValue) { }
         public void Add(string propertyName, int propertyValue) { }
