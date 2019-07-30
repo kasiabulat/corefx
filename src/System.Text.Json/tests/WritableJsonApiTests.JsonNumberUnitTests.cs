@@ -420,5 +420,56 @@ namespace System.Text.Json
             Assert.False(success);
             Assert.Throws<FormatException>(() => jsonNumber.GetUInt64());
         }
+
+        [Theory]
+        [InlineData("0")]
+        [InlineData("-17")]
+        [InlineData("17")]
+        [InlineData("3.14")]
+        [InlineData("-3.1415")]
+        [InlineData("1234567890")]
+        [InlineData("1e400")]
+        [InlineData("1e+100000002")]
+        [InlineData("184467440737095516150.184467440737095516150")]
+        public static void TestToString(string value)
+        {
+            var jsonNumber = new JsonNumber();
+            jsonNumber.SetFormattedValue(value);
+            Assert.Equal(value, jsonNumber.ToString());
+        }
+
+        [Fact]
+        public static void TestChangingTypes()
+        {
+            var jsonNumber = new JsonNumber(5);
+            Assert.Equal(5, jsonNumber.GetInt32());
+
+            jsonNumber.SetDouble(3.14);
+            Assert.Equal(3.14, jsonNumber.GetDouble());
+
+            jsonNumber.SetByte(17);
+            Assert.Equal(17, jsonNumber.GetByte());
+
+            jsonNumber.SetInt64(long.MaxValue);
+            Assert.Equal(long.MaxValue, jsonNumber.GetInt64());
+
+            jsonNumber.SetUInt16(ushort.MaxValue);
+            Assert.Equal(ushort.MaxValue, jsonNumber.GetUInt16());
+
+            jsonNumber.SetSingle(-1.1f);
+            Assert.Equal(-1.1f, jsonNumber.GetSingle());
+
+            jsonNumber.SetSByte(4);
+            Assert.Equal(4, jsonNumber.GetSByte());
+
+            jsonNumber.SetUInt32(127);
+            Assert.Equal((uint)127, jsonNumber.GetUInt32());
+
+            jsonNumber.SetFormattedValue("1e400");
+            Assert.Equal("1e400", jsonNumber.ToString());
+
+            jsonNumber.SetUInt64(ulong.MaxValue);
+            Assert.Equal(ulong.MaxValue, jsonNumber.GetUInt64());
+        }
     }
 }
