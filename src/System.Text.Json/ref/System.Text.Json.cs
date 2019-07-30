@@ -271,6 +271,7 @@ namespace System.Text.Json
     {
         public JsonNumber() { }
         public JsonNumber(byte value) { }
+        public JsonNumber(decimal value) { }
         public JsonNumber(double value) { }
         public JsonNumber(short value) { }
         public JsonNumber(int value) { }
@@ -288,6 +289,7 @@ namespace System.Text.Json
         public override bool Equals(object obj) { throw null; }
         public bool Equals(System.Text.Json.JsonNumber other) { throw null; }
         public byte GetByte() { throw null; }
+        public decimal GetDecimal() { throw null; }
         public double GetDouble() { throw null; }
         public override int GetHashCode() { throw null; }
         public short GetInt16() { throw null; }
@@ -304,6 +306,7 @@ namespace System.Text.Json
         public ulong GetUInt64() { throw null; }
         public static bool operator ==(System.Text.Json.JsonNumber left, System.Text.Json.JsonNumber right) { throw null; }
         public static implicit operator System.Text.Json.JsonNumber (byte value) { throw null; }
+        public static implicit operator System.Text.Json.JsonNumber (decimal value) { throw null; }
         public static implicit operator System.Text.Json.JsonNumber (double value) { throw null; }
         public static implicit operator System.Text.Json.JsonNumber (short value) { throw null; }
         public static implicit operator System.Text.Json.JsonNumber (int value) { throw null; }
@@ -319,6 +322,7 @@ namespace System.Text.Json
         public static implicit operator System.Text.Json.JsonNumber (ulong value) { throw null; }
         public static bool operator !=(System.Text.Json.JsonNumber left, System.Text.Json.JsonNumber right) { throw null; }
         public void SetByte(byte value) { }
+        public void SetDecimal(decimal value) { }
         public void SetDouble(double value) { }
         public void SetFormattedValue(string value) { }
         public void SetInt16(short value) { }
@@ -335,6 +339,7 @@ namespace System.Text.Json
         public void SetUInt64(ulong value) { }
         public override string ToString() { throw null; }
         public bool TryGetByte(out byte value) { throw null; }
+        public bool TryGetDecimal(out decimal value) { throw null; }
         public bool TryGetDouble(out double value) { throw null; }
         public bool TryGetInt16(out short value) { throw null; }
         public bool TryGetInt32(out int value) { throw null; }

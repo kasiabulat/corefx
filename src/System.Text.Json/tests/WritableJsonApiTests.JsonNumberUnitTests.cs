@@ -180,6 +180,17 @@ namespace System.Text.Json
             Assert.Equal(value, result);
         }
 
+        [Fact]
+        public static void TestDecimal()
+        {
+            var decimalValue = decimal.MaxValue;
+            var jsonNumber = new JsonNumber();
+            jsonNumber.SetDecimal(decimalValue);
+            Assert.Equal(decimalValue, jsonNumber.GetDecimal());
+            Assert.True(jsonNumber.TryGetDecimal(out decimal result));
+            Assert.Equal(decimalValue, result);
+        }
+
         [Theory]
         [InlineData("3.14")]
         [InlineData("-17")]
@@ -276,6 +287,10 @@ namespace System.Text.Json
             Assert.Equal(value, jsonNumber.GetUInt64());
             Assert.True(jsonNumber.TryGetUInt64(out ulong ulongResult));
             Assert.Equal(value, ulongResult);
+
+            Assert.Equal(value, jsonNumber.GetDecimal());
+            Assert.True(jsonNumber.TryGetDecimal(out decimal decimalResult));
+            Assert.Equal(value, decimalResult);
         }
 
         [Fact]
@@ -402,6 +417,9 @@ namespace System.Text.Json
 
             jsonNumber.SetUInt64(ulong.MaxValue);
             Assert.Equal(ulong.MaxValue, jsonNumber.GetUInt64());
+
+            jsonNumber.SetDecimal(decimal.MaxValue);
+            Assert.Equal(decimal.MaxValue, jsonNumber.GetDecimal());
         }
 
         [Fact]
@@ -446,6 +464,10 @@ namespace System.Text.Json
             ulong ulongValue = ulong.MaxValue;
             jsonNumber = ulongValue;
             Assert.Equal(ulongValue, jsonNumber.GetUInt64());
+
+            decimal decimalValue = decimal.MaxValue;
+            jsonNumber = decimalValue;
+            Assert.Equal(decimalValue, jsonNumber.GetDecimal());
         }
     }
 }

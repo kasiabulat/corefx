@@ -41,6 +41,8 @@ namespace System.Text.Json
         [CLSCompliant(false)]
         public JsonNumber(ulong value) => SetUInt64(value);
 
+        public JsonNumber(decimal value) => SetDecimal(value);
+
         public override string ToString() => _value; 
         
         public byte GetByte() => byte.Parse(_value);
@@ -67,6 +69,8 @@ namespace System.Text.Json
         [CLSCompliant(false)]
         public ulong GetUInt64() => ulong.Parse(_value);
 
+        public decimal GetDecimal() => decimal.Parse(_value);
+
         public bool TryGetByte(out byte value) => byte.TryParse(_value, out value);
 
         public bool TryGetInt16(out short value) => short.TryParse(_value, out value);
@@ -90,6 +94,8 @@ namespace System.Text.Json
 
         [CLSCompliant(false)]
         public bool TryGetUInt64(out ulong value) => ulong.TryParse(_value, out value);
+
+        public bool TryGetDecimal(out decimal value) => decimal.TryParse(_value, out value);
 
 
         public void SetFormattedValue(string value)
@@ -127,6 +133,8 @@ namespace System.Text.Json
         [CLSCompliant(false)]
         public void SetUInt64(ulong value) => _value = value.ToString();
 
+        public void SetDecimal(decimal value) => _value = value.ToString();
+
         public static implicit operator JsonNumber(byte value) => new JsonNumber(value);
         
         public static implicit operator JsonNumber(int value) => new JsonNumber(value);
@@ -150,6 +158,8 @@ namespace System.Text.Json
         
         [CLSCompliant(false)]
         public static implicit operator JsonNumber(ulong value) => new JsonNumber(value);
+
+        public static implicit operator JsonNumber(decimal value) => new JsonNumber(value);
 
         public override bool Equals(object obj) => obj is JsonNumber number && _value == number._value;
 
