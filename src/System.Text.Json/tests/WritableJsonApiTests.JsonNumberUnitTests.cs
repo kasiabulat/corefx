@@ -12,7 +12,7 @@ namespace System.Text.Json
         [InlineData(-456)]
         [InlineData(0)]
         [InlineData(17)]
-        [InlineData(Int64.MaxValue)]
+        [InlineData(long.MaxValue)]
         [InlineData(2.3)]
         [InlineData(-17.009)]
         [InlineData(3.14f)]
@@ -28,11 +28,19 @@ namespace System.Text.Json
         }
 
         [Fact]
-        public static void TestByte()
+        public static void TestDefaultCtor()
         {
             var jsonNumber = new JsonNumber();
-            byte value = 17;
-            
+            Assert.Equal(0, jsonNumber.GetInt32());
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(17)]
+        [InlineData(255)]
+        public static void TestByte(byte value)
+        {
+            var jsonNumber = new JsonNumber();            
             jsonNumber.SetByte(value);
             byte result = jsonNumber.GetByte();
             Assert.Equal(value, result);
@@ -42,12 +50,15 @@ namespace System.Text.Json
             Assert.Equal(value, result);
         }
 
-        [Fact]
-        public static void TestShort()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-17)]
+        [InlineData(17)]
+        [InlineData(short.MinValue)]
+        [InlineData(short.MaxValue)]
+        public static void TestShort(short value)
         {
             var jsonNumber = new JsonNumber();
-            short value = 17;
-
             jsonNumber.SetInt16(value);
             short result = jsonNumber.GetInt16();
             Assert.Equal(value, result);
@@ -57,12 +68,15 @@ namespace System.Text.Json
             Assert.Equal(value, result);
         }
 
-        [Fact]
-        public static void TestInt()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-17)]
+        [InlineData(17)]
+        [InlineData(int.MinValue)]
+        [InlineData(int.MaxValue)]
+        public static void TestInt(int value)
         {
             var jsonNumber = new JsonNumber();
-            int value = 17;
-
             jsonNumber.SetInt32(value);
             int result = jsonNumber.GetInt32();
             Assert.Equal(value, result);
@@ -72,12 +86,15 @@ namespace System.Text.Json
             Assert.Equal(value, result);
         }
 
-        [Fact]
-        public static void TestLong()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-17)]
+        [InlineData(17)]
+        [InlineData(long.MinValue)]
+        [InlineData(long.MaxValue)]
+        public static void TestLong(long value)
         {
             var jsonNumber = new JsonNumber();
-            long value = 17;
-
             jsonNumber.SetInt64(value);
             long result = jsonNumber.GetInt64();
             Assert.Equal(value, result);
@@ -87,12 +104,17 @@ namespace System.Text.Json
             Assert.Equal(value, result);
         }
 
-        [Fact]
-        public static void TestFloat()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(17)]
+        [InlineData(-17)]
+        [InlineData(3.14)]
+        [InlineData(-15.5)]
+        [InlineData(float.MinValue)]
+        [InlineData(float.MaxValue)]
+        public static void TestFloat(float value)
         {
             var jsonNumber = new JsonNumber();
-            float value = 3.14f;
-
             jsonNumber.SetSingle(value);
             float result = jsonNumber.GetSingle();
             Assert.Equal(value, result);
@@ -102,12 +124,17 @@ namespace System.Text.Json
             Assert.Equal(value, result);
         }
 
-        [Fact]
-        public static void TestDouble()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(17)]
+        [InlineData(-17)]
+        [InlineData(3.14)]
+        [InlineData(-15.5)]
+        [InlineData(double.MinValue)]
+        [InlineData(double.MaxValue)]
+        public static void TestDouble(double value)
         {
             var jsonNumber = new JsonNumber();
-            double value = 3.14;
-
             jsonNumber.SetDouble(value);
             double result = jsonNumber.GetDouble();
             Assert.Equal(value, result);
@@ -117,12 +144,15 @@ namespace System.Text.Json
             Assert.Equal(value, result);
         }
 
-        [Fact]
-        public static void TestSbyte()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(17)]
+        [InlineData(-17)]
+        [InlineData(sbyte.MinValue)]
+        [InlineData(sbyte.MaxValue)]
+        public static void TestSbyte(sbyte value)
         {
             var jsonNumber = new JsonNumber();
-            sbyte value = 5;
-
             jsonNumber.SetSByte(value);
             sbyte result = jsonNumber.GetSByte();
             Assert.Equal(value, result);
@@ -132,12 +162,13 @@ namespace System.Text.Json
             Assert.Equal(value, result);
         }
 
-        [Fact]
-        public static void TestUInt16()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(17)]
+        [InlineData(ushort.MaxValue)]
+        public static void TestUInt16(ushort value)
         {
             var jsonNumber = new JsonNumber();
-            ushort value = 5;
-
             jsonNumber.SetUInt16(value);
             ushort result = jsonNumber.GetUInt16();
             Assert.Equal(value, result);
@@ -147,12 +178,13 @@ namespace System.Text.Json
             Assert.Equal(value, result);
         }
 
-        [Fact]
-        public static void TestUInt32()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(17)]
+        [InlineData(uint.MaxValue)]
+        public static void TestUInt32(uint value)
         {
             var jsonNumber = new JsonNumber();
-            uint value = 5;
-
             jsonNumber.SetUInt32(value);
             uint result = jsonNumber.GetUInt32();
             Assert.Equal(value, result);
@@ -162,12 +194,13 @@ namespace System.Text.Json
             Assert.Equal(value, result);
         }
 
-        [Fact]
-        public static void TestUInt64()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(17)]
+        [InlineData(ulong.MaxValue)]
+        public static void TestUInt64(ulong value)
         {
             var jsonNumber = new JsonNumber();
-            ulong value = 5;
-
             jsonNumber.SetUInt64(value);
             ulong result = jsonNumber.GetUInt64();
             Assert.Equal(value, result);
@@ -188,21 +221,41 @@ namespace System.Text.Json
         public static void TestString(string value)
         {
             var jsonNumber = new JsonNumber();
-            jsonNumber.SetString(value);
-            string result = jsonNumber.GetString();
+            jsonNumber.SetFormattedValue(value);
+            string result = jsonNumber.ToString();
             Assert.Equal(value, result);
         }
 
         [Theory]
+        [InlineData("")]
         [InlineData("3,14")]
         [InlineData("this is not a number")]
         [InlineData("NAN")]
         [InlineData("0.")]
         [InlineData("008")]
+        [InlineData("0e")]
         [InlineData("5e")]
+        [InlineData("5a")]
+        [InlineData("0.1e")]
+        [InlineData("-01")]
+        [InlineData("10.5e")]
+        [InlineData("10.5e-")]
+        [InlineData("10.5e+")]
+        [InlineData("10.5e-0.2")]
+        [InlineData(" 6")]
+        [InlineData("6 ")]
+        [InlineData(" 6 ")]
+        [InlineData("+0")]
+        [InlineData("+1")]
         public static void TestInvalidString(string value)
         {
             Assert.Throws<ArgumentException>(() => new JsonNumber(value));
+        }
+
+        [Fact]
+        public static void TestNullString()
+        {
+            Assert.Throws<NullReferenceException>(() => new JsonNumber(null));
         }
 
         [Fact]

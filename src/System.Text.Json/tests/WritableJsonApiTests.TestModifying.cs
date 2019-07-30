@@ -81,8 +81,8 @@ namespace System.Text.Json
             Assert.True(isEnabled.Value);
 
             JsonNumber veryBigConstant = new JsonNumber();
-            veryBigConstant.SetString("1e1000");
-            string bigNumber = veryBigConstant.GetString();
+            veryBigConstant.SetFormattedValue("1e1000");
+            string bigNumber = veryBigConstant.ToString();
 
             Assert.Equal("1e1000", bigNumber);
 

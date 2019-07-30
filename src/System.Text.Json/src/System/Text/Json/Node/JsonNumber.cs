@@ -5,6 +5,8 @@
 // for now disabling error caused by not adding documentation to methods 
 #pragma warning disable CS1591
 
+using System.Buffers;
+
 namespace System.Text.Json
 {
     public partial class JsonNumber : JsonNode, IEquatable<JsonNumber>
@@ -13,7 +15,7 @@ namespace System.Text.Json
 
         public JsonNumber() => _value = "0";
 
-        public JsonNumber(string value) => SetString(value);
+        public JsonNumber(string value) => SetFormattedValue(value);
         
         public JsonNumber(byte value) => SetByte(value);
         
@@ -39,7 +41,7 @@ namespace System.Text.Json
         [CLSCompliant(false)]
         public JsonNumber(ulong value) => SetUInt64(value);
 
-        public string GetString() => _value; 
+        public override string ToString() => _value; 
         
         public byte GetByte() => byte.Parse(_value);
         
@@ -90,8 +92,13 @@ namespace System.Text.Json
         public bool TryGetUInt64(out ulong value) => ulong.TryParse(_value, out value);
 
 
-        public void SetString(string value)
+        public void SetFormattedValue(string value)
         {
+            if (value == null)
+                throw new NullReferenceException("Expected number, but instead got null.");
+            if (value == "")
+                throw new ArgumentException("Expected number, but instead got empty string.");
+            
             JsonWriterHelper.ValidateNumber(Encoding.UTF8.GetBytes(value).AsSpan());
             _value = value;
         }
@@ -146,7 +153,7 @@ namespace System.Text.Json
 
         public override bool Equals(object obj) => obj is JsonNumber number && _value == number._value;
 
-        public override int GetHashCode() => HashCode.Combine(_value);
+        public override int GetHashCode() => _value.GetHashCode();
 
         public bool Equals(JsonNumber other) => _value == other._value;
 

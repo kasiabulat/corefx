@@ -296,7 +296,6 @@ namespace System.Text.Json
         [System.CLSCompliantAttribute(false)]
         public sbyte GetSByte() { throw null; }
         public float GetSingle() { throw null; }
-        public string GetString() { throw null; }
         [System.CLSCompliantAttribute(false)]
         public ushort GetUInt16() { throw null; }
         [System.CLSCompliantAttribute(false)]
@@ -321,19 +320,20 @@ namespace System.Text.Json
         public static bool operator !=(System.Text.Json.JsonNumber left, System.Text.Json.JsonNumber right) { throw null; }
         public void SetByte(byte value) { }
         public void SetDouble(double value) { }
+        public void SetFormattedValue(string value) { }
         public void SetInt16(short value) { }
         public void SetInt32(int value) { }
         public void SetInt64(long value) { }
         [System.CLSCompliantAttribute(false)]
         public void SetSByte(sbyte value) { }
         public void SetSingle(float value) { }
-        public void SetString(string value) { }
         [System.CLSCompliantAttribute(false)]
         public void SetUInt16(ushort value) { }
         [System.CLSCompliantAttribute(false)]
         public void SetUInt32(uint value) { }
         [System.CLSCompliantAttribute(false)]
         public void SetUInt64(ulong value) { }
+        public override string ToString() { throw null; }
         public bool TryGetByte(out byte value) { throw null; }
         public bool TryGetDouble(out double value) { throw null; }
         public bool TryGetInt16(out short value) { throw null; }
