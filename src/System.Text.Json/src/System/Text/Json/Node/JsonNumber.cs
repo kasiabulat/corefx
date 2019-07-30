@@ -95,9 +95,9 @@ namespace System.Text.Json
         public void SetFormattedValue(string value)
         {
             if (value == null)
-                throw new NullReferenceException("Expected number, but instead got null.");
-            if (value == "")
-                throw new ArgumentException("Expected number, but instead got empty string.");
+                throw new ArgumentNullException(nameof(value));
+            if (value.Length == 0)
+                throw new ArgumentException("Expected number, but instead got empty string.", nameof(value));
             
             JsonWriterHelper.ValidateNumber(Encoding.UTF8.GetBytes(value).AsSpan());
             _value = value;
