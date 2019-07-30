@@ -471,5 +471,49 @@ namespace System.Text.Json
             jsonNumber.SetUInt64(ulong.MaxValue);
             Assert.Equal(ulong.MaxValue, jsonNumber.GetUInt64());
         }
+
+        [Fact]
+        public static void TestImplicitOperators()
+        {
+            byte byteValue = byte.MaxValue;
+            JsonNumber jsonNumber = byteValue;
+            Assert.Equal(byteValue, jsonNumber.GetByte());
+
+            short shortValue = short.MaxValue;
+            jsonNumber = shortValue;
+            Assert.Equal(shortValue, jsonNumber.GetInt16());
+
+            int intValue = int.MaxValue;
+            jsonNumber = intValue;
+            Assert.Equal(intValue, jsonNumber.GetInt32());
+
+            long longValue = long.MaxValue;
+            jsonNumber = longValue;
+            Assert.Equal(longValue, jsonNumber.GetInt64());
+
+            float floatValue = float.MaxValue;
+            jsonNumber = floatValue;
+            Assert.Equal(floatValue, jsonNumber.GetSingle());
+
+            double doubleValue = double.MaxValue;
+            jsonNumber = doubleValue;
+            Assert.Equal(doubleValue, jsonNumber.GetDouble());
+
+            sbyte sbyteValue = sbyte.MaxValue;
+            jsonNumber = sbyteValue;
+            Assert.Equal(sbyteValue, jsonNumber.GetSByte());
+
+            ushort ushortValue = ushort.MaxValue;
+            jsonNumber = ushortValue;
+            Assert.Equal(ushortValue, jsonNumber.GetUInt16());
+
+            uint uintValue = uint.MaxValue;
+            jsonNumber = uintValue;
+            Assert.Equal(uintValue, jsonNumber.GetUInt32());
+
+            ulong ulongValue = ulong.MaxValue;
+            jsonNumber = ulongValue;
+            Assert.Equal(ulongValue, jsonNumber.GetUInt64());
+        }
     }
 }
