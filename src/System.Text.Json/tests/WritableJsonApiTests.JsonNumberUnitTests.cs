@@ -40,11 +40,11 @@ namespace System.Text.Json
         [InlineData(255)]
         public static void TestByte(byte value)
         {
-            var jsonNumber = new JsonNumber();            
+            var jsonNumber = new JsonNumber();
             jsonNumber.SetByte(value);
             byte result = jsonNumber.GetByte();
             Assert.Equal(value, result);
-            
+
             bool success = jsonNumber.TryGetByte(out result);
             Assert.True(success);
             Assert.Equal(value, result);
@@ -264,6 +264,161 @@ namespace System.Text.Json
             var jsonNumber = new JsonNumber("145");
             int result = jsonNumber.GetInt32();
             Assert.Equal(145, result);
+        }
+
+        [Fact]
+        public static void TestUpcasts()
+        {
+            byte value = 17;
+            var jsonNumber = new JsonNumber(value);
+
+            // Geeting other types should also succeed:
+            short shortResult = jsonNumber.GetInt16();
+            Assert.Equal(value, shortResult);
+            bool success = jsonNumber.TryGetInt16(out shortResult);
+            Assert.True(success);
+            Assert.Equal(value, shortResult);
+
+            int intResult = jsonNumber.GetInt32();
+            Assert.Equal(value, intResult);
+            success = jsonNumber.TryGetInt32(out intResult);
+            Assert.True(success);
+            Assert.Equal(value, intResult);
+
+            long longResult = jsonNumber.GetInt64();
+            Assert.Equal(value, longResult);
+            success = jsonNumber.TryGetInt64(out longResult);
+            Assert.True(success);
+            Assert.Equal(value, longResult);
+
+            float floatResult = jsonNumber.GetSingle();
+            Assert.Equal(value, floatResult);
+            success = jsonNumber.TryGetSingle(out floatResult);
+            Assert.True(success);
+            Assert.Equal(value, floatResult);
+
+            double doubleResult = jsonNumber.GetDouble();
+            Assert.Equal(value, doubleResult);
+            success = jsonNumber.TryGetDouble(out doubleResult);
+            Assert.True(success);
+            Assert.Equal(value, doubleResult);
+
+            sbyte sbyteResult = jsonNumber.GetSByte();
+            Assert.Equal(value, (byte)sbyteResult);
+            success = jsonNumber.TryGetSByte(out sbyteResult);
+            Assert.True(success);
+            Assert.Equal(value, (byte)sbyteResult);
+
+            ushort ushortResult = jsonNumber.GetUInt16();
+            Assert.Equal(value, ushortResult);
+            success = jsonNumber.TryGetUInt16(out ushortResult);
+            Assert.True(success);
+            Assert.Equal(value, ushortResult);
+
+            uint uintResult = jsonNumber.GetUInt32();
+            Assert.Equal(value, uintResult);
+            success = jsonNumber.TryGetUInt32(out uintResult);
+            Assert.True(success);
+            Assert.Equal(value, uintResult);
+
+            ulong ulongResult = jsonNumber.GetUInt64();
+            Assert.Equal(value, ulongResult);
+            success = jsonNumber.TryGetUInt64(out ulongResult);
+            Assert.True(success);
+            Assert.Equal(value, ulongResult);
+        }
+
+        [Fact]
+        public static void TestIntegerGetMismatches()
+        {
+            var jsonNumber = new JsonNumber(long.MaxValue);
+
+            // Geeting smaller types should fail:
+            bool success = jsonNumber.TryGetByte(out byte byteResult);
+            Assert.False(success);
+            Assert.Throws<OverflowException>(() => jsonNumber.GetByte());
+
+            success = jsonNumber.TryGetInt16(out short shortResult);
+            Assert.False(success);
+            Assert.Throws<OverflowException>(() => jsonNumber.GetInt16());
+
+            success = jsonNumber.TryGetInt32(out int intResult);
+            Assert.False(success);
+            Assert.Throws<OverflowException>(() => jsonNumber.GetInt32());
+
+            success = jsonNumber.TryGetSByte(out sbyte sbyteResult);
+            Assert.False(success);
+            Assert.Throws<OverflowException>(() => jsonNumber.GetSByte());
+
+            success = jsonNumber.TryGetUInt16(out ushort ushortResult);
+            Assert.False(success);
+            Assert.Throws<OverflowException>(() => jsonNumber.GetUInt16());
+
+            success = jsonNumber.TryGetUInt32(out uint uintResult);
+            Assert.False(success);
+            Assert.Throws<OverflowException>(() => jsonNumber.GetUInt32());
+        }
+
+        [Fact]
+        public static void TestUnsignedGetMismatches()
+        {
+            var jsonNumber = new JsonNumber("-1");
+
+            // Geeting unsigned types should fail:
+            bool success = jsonNumber.TryGetByte(out byte byteResult);
+            Assert.False(success);
+            Assert.Throws<OverflowException>(() => jsonNumber.GetByte());
+
+            success = jsonNumber.TryGetUInt16(out ushort ushortResult);
+            Assert.False(success);
+            Assert.Throws<OverflowException>(() => jsonNumber.GetUInt16());
+
+            success = jsonNumber.TryGetUInt32(out uint uintResult);
+            Assert.False(success);
+            Assert.Throws<OverflowException>(() => jsonNumber.GetUInt32());
+
+            success = jsonNumber.TryGetUInt64(out ulong ulongResult);
+            Assert.False(success);
+            Assert.Throws<OverflowException>(() => jsonNumber.GetUInt64());
+        }
+
+        [Fact]
+        public static void TestRationalGetMismatches()
+        {
+            var jsonNumber = new JsonNumber("3.14");
+
+            // Geeting integer types should fail:
+            bool success = jsonNumber.TryGetByte(out byte byteResult);
+            Assert.False(success);
+            Assert.Throws<FormatException>(() => jsonNumber.GetByte());
+
+            success = jsonNumber.TryGetInt16(out short shortResult);
+            Assert.False(success);
+            Assert.Throws<FormatException>(() => jsonNumber.GetInt16());
+
+            success = jsonNumber.TryGetInt32(out int intResult);
+            Assert.False(success);
+            Assert.Throws<FormatException>(() => jsonNumber.GetInt32());
+
+            success = jsonNumber.TryGetInt64(out long longResult);
+            Assert.False(success);
+            Assert.Throws<FormatException>(() => jsonNumber.GetInt64());
+
+            success = jsonNumber.TryGetSByte(out sbyte sbyteResult);
+            Assert.False(success);
+            Assert.Throws<FormatException>(() => jsonNumber.GetSByte());
+
+            success = jsonNumber.TryGetUInt16(out ushort ushortResult);
+            Assert.False(success);
+            Assert.Throws<FormatException>(() => jsonNumber.GetUInt16());
+
+            success = jsonNumber.TryGetUInt32(out uint uintResult);
+            Assert.False(success);
+            Assert.Throws<FormatException>(() => jsonNumber.GetUInt32());
+
+            success = jsonNumber.TryGetUInt64(out ulong ulongResult);
+            Assert.False(success);
+            Assert.Throws<FormatException>(() => jsonNumber.GetUInt64());
         }
     }
 }
