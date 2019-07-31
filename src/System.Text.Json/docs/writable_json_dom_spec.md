@@ -2,12 +2,12 @@
 
 ## Introduction
 
-`JsonNode` is modifiable, dictionary-backed API to complement the readonly `JsonDocumet`.
+`JsonNode` is a modifiable, dictionary-backed API to complement the readonly `JsonDocument`.
 
-It is the base class for the following overloads representing all possible kinds of JSON nodes:
+It is the base class for the following concrete types representing all possible kinds of JSON nodes:
 * `JsonString` - representing JSON text value
 * `JsonBoolean` - representing JSON boolean value (`true` or `false`)
-* `JsonNumber` - representing JSON numeric value, can be created from and converted to all possible numeric primary types
+* `JsonNumber` - representing JSON numeric value, can be created from and converted to all possible built-in numeric types
 * `JsonArray` - representing the array of JSON nodes
 * `JsonObject` - representing the set of properties - named JSON nodes
 
@@ -118,9 +118,9 @@ reportingEmployees.ModifyPropertyName("software developers", "software engineers
 
 ### Transforming to and from JsonElement
 
-The API allows users to get a writable version of JSON document from readonly one and vice versa:
+The API allows users to get a writable version of JSON document from a readonly one and vice versa:
 
-Transforming JsoneNode to JsonElement:
+Transforming JsonNode to JsonElement:
 ```
 JsonNode employeeDataToSend = EmployeesDatabase.GetNextEmployee().Value;
 Mailbox.SendEmployeeData(employeeDataToSend.AsJsonElement());
@@ -137,7 +137,7 @@ if (receivedEmployeeData is JsonObject employee)
 
 ### Parsing to JsonNode
 
-If developer knows he/she wil be modifying and instance, API provides the possibility to parse string rigth to `JsonNode`, without `JsonDocument` being an intermediary.
+If a developer knows they will be modifying an instance, there is an API to parse string right to `JsonNode`, without `JsonDocument` being an intermediary.
 
 ```
 string jsonString = @"
@@ -161,7 +161,7 @@ employees.Add(EmployeesDatabase.GetNextEmployee());
 Mailbox.SendAllEmployeesData(employees.AsJsonElement());
 ```
 
-## Desingn choices
+## Design choices
 
 * No advanced methods for looking up properties like `GetAllValuesByPropertyName` or `GetAllPrimaryTypedValues`, because they would be too specialized.
 * `null` reference to node instead of `JsonNull` class.
@@ -208,7 +208,7 @@ Mailbox.SendAllEmployeesData(employees.AsJsonElement());
 ## Open questions
 API:
 * Do we want to add recursive equals on `JsonArray` and `JsonObject`?
-* Do we want to make `JsonNode`s derived types (and which) implement `IComperable`?
+* Do we want to make `JsonNode`s derived types (and which) implement `IComparable`?
 * Would escaped characters be supported for creating `JsonNumber` from string? 
 
 Implementation:
