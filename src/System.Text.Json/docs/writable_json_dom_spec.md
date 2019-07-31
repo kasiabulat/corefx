@@ -87,7 +87,6 @@ var preferences = new JsonObject()
     { "colours", new JsonArray { "red", "green", "purple" } },
     { "numbers", new JsonArray { 4, 123, 88 } },
     { "prime numbers", new JsonNumber[] { 19, 37 } },
-    { "varia", new JsonArray { 17, "green", true } },
     { "dishes", new JsonArray(dishes) },
     { "sports", new JsonArray(sports) },
     { "strange words", strangeWords.Where(word => ((JsonString)word).Value.Length < 10) },
@@ -162,3 +161,80 @@ employees.Add(EmployeesDatabase.GetNextEmployee());
 Mailbox.SendAllEmployeesData(employees.AsJsonElement());
 ```
 
+## Desingn choices
+
+* No advanced methods for looking up properties like `GetAllValuesByPropertyName` or `GetAllPrimaryTypedValues`, because they would be too specialized.
+* `null` reference to node instead of `JsonNull` class.
+
+* Initializing JsonArray with additional constructors accepting `IEnumerable`s of all primary types (bool, string, int, double,  long...).
+
+    Considered solutions:
+
+    1. One additional constructor in JsonArray
+    ```
+    public JsonArray(IEnumerable<object> jsonValues) { }
+    ``` 
+    2. Implicit operator from Array in JsonArray
+
+    3. More additional constructors in JsonArray (chosen)
+    ```
+    public JsonArray(IEnumerable<string> jsonValues) { }
+    public JsonArray(IEnumerable<bool> jsonValues) { }
+    public JsonArray(IEnumerable<sbyte> jsonValues) { }
+    ...
+    public JsonArray(IEnumerable<double> jsonValues) { }
+    ``` 
+
+    | Solution | Pros | Cons | Comment |
+    |----------|:-------------|:------|--------:|
+    | 1 | - only one additional method <br> - accepts collection of different types <br> - accepts IEnumerable <br> - IntelliSense | - accepts collection of not JsonNodes <br> - needs to check it in runtime  | accepts too much, <br> array of different primary types wouldn't be returned from method |
+    | 2 | - only one additional method <br> - accepts collection of different types <br > | - works  only in C# <br> - no IntelliSense <br> - users may not be aware of it <br> - accepts only Array <br> - accepts collection of not JsonNodes <br> - needs to check it in runtime | from {1,2}, <br>2 seems worse |
+    | 3 | - accepts IEnumerable <br> - does not accept collection of not JsonNodes <br> - no checks in runtime <br> - IntelliSense | - a lot of additional methods <br> - does not accept a collection of different types | gives less possibilities than {1,2}, but requiers no additional checks |
+
+* Implicit operators for `JsonString`, `JsonBoolean` and `JsonNumber` as an additional feature.
+* `Sort` not implemented for `JsonArray`, beacuse there is no right way to compare `JsonObject`s. If user wants to sort `JsonArray` of `JsonNumber`s, `JsonBooleans`s or `JsonStrings` he/she now needs to do the following: convert `JsonArray` to regular array (by iterating through all elements), calling sort (and converting back to `JsonArray` if needed).
+* No support for duplicates of property names. Possibly, adding an option for user to choose from: "first value", "last value", or throw-on-duplicate.
+* Transformation API:
+    * `DeepCopy` method in JsonElement allowing to change JsonElement and JsonDocument into JsonNode recursively transforming all of the elements
+    * `AsJsonElement` method in JsonNode allowing to change JsonNode into JsonElement with IsImmutable property set to false
+    * `IsImmutable` property informing if JsonElement is keeping JsonDocument or JsonNode underneath
+    * `Parse(string)` in JsonNode to be able to parse Json string right into JsonNode if user knows he/she wants mutable version
+    * `DeepCopy` in JsonNode to make a copy of the whole tree
+    * `GetNode` and TryGetNode in JsonNode allowing to retrieve it from JsonElement
+
+## Implementation details
+* `JsonNumber` value is stored as a `string`. 
+
+## Open questions
+API:
+* Do we want to add recursive equals on `JsonArray` and `JsonObject`?
+* Do we want to make `JsonNode`s derived types (and which) implement `IComperable`?
+* Would escaped characters be supported for creating `JsonNumber` from string? 
+
+Implementation:
+* Do we want to add a copy of `JsonWriterHelper.ValidateNumber` with additional checks?
+* Do we want to store `JsonNumber` as `Span<byte>` instead of `string`? 
+
+## Useful links
+
+### JSON
+* grammar: https://www.json.org/
+* specification: https://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf
+
+### Similar APIs
+`JsonElement` and `JsonDocument` from `System.Json.Text` API:
+* video: https://channel9.msdn.com/Shows/On-NET/Try-the-new-SystemTextJson-APIs
+* blogpost: https://devblogs.microsoft.com/dotnet/try-the-new-system-text-json-apis/
+* performance: https://github.com/dotnet/corefx/issues/33115
+* spans: https://msdn.microsoft.com/en-us/magazine/mt814808.aspx
+
+`Json.NET` and its advantages:
+* XPath https://goessner.net/articles/JsonPath/
+* LINQ https://www.newtonsoft.com/json/help/html/LINQtoJSON.htm
+* XML https://www.newtonsoft.com/json/help/html/ConvertJsonToXml.htm
+
+`System.Json` using similar concepts:
+* documentation: https://docs.microsoft.com/en-us/dotnet/api/system.json?view=dotnet-plat-ext-2.1
+* APIs of .NET: https://apisof.net/catalog/System.Json.JsonValue
+* Mono: https://github.com/mono/mono/commits/f79fec62c57dc3d59807f06ac14c02690bb942f1/mcs/class/System.Json/System.Json/JsonType.cs 
+* add System.Json pull request: https://github.com/dotnet/corefx/pull/9897
