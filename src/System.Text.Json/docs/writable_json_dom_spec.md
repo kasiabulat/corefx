@@ -170,6 +170,8 @@ Mailbox.SendAllEmployeesData(employees.AsJsonElement());
 
 ## Design choices
 
+* Avoid any significant perf regression to the readonly implementation of `JsonDocument` and `JsonElement`.
+* Higher emphasis on usability over allocations/performance.
 * No advanced methods for looking up properties like `GetAllValuesByPropertyName` or `GetAllPrimaryTypedValues`, because they would be too specialized.
 * Support for LINQ style quering capability.
 * `null` reference to node instead of `JsonNull` class.
